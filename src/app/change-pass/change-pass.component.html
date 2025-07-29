@@ -1,0 +1,23 @@
+  <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()" class="profile-forms">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="pwd">Password:</label>
+        <input type="password" formControlName="password" [(ngModel)]="password" (blur)="onPasswordSubmit()" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        <div *ngIf="submitted && f.password.errors" class="error-message invalid-feedback">
+            <div *ngIf="f.password.errors.required">Password is required</div>
+            <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+        </div>
+      </div>
+      <div class="form-group">
+          <label for="pwd">Confirm Password:</label>
+          <input type="password" formControlName="confirmPassword" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }" />
+          <div *ngIf="submitted && f.confirmPassword.errors" class="error-message invalid-feedback">
+              <div *ngIf="f.confirmPassword.errors.required">Confirm Password is required</div>
+              <div *ngIf="f.confirmPassword.errors.mustMatch">Passwords must match</div>
+          </div>
+        </div>
+        <button [disabled]="!passwordForm.valid" class="btn btn-primary align-submit"  (click)="onPasswordSubmit()" type="button">Submit</button>
+        <button class="btn btn-primary-outline" type="button" (click)="resetForm()">Cancel</button>
+    </div>
+  </form>
+  <p-toast [style]="{marginTop: '50px'}" styleClass="custom-toast" key="custom" position="top-center"></p-toast>

@@ -1,0 +1,52 @@
+https://issoindia.com/isso/#/school-registration
+https://issoindia.com/isso/#/isf-school
+http://localhost:4200/#/isf-school
+baseUrl: 'http://localhost/isso-php/'
+baseUrl: 'https://issoindia.com/isso-php/'
+   // $html .=  htmlspecialchars($subGameName).'</td> 
+ 12 Years, 9 Months, 5Days
+ 12 Year's, 1 Months, 19 Days
+--------------------------------------------------
+ For SMS -->https://www.youtube.com/watch?v=ZGdkqjnQE1o
+---------------------------------------------------- 
+
+9cm width
+12 cm height
+dlrc
+
+Isso@1234567
+ https://www.youtube.com/watch?v=So2wkFwbkMw&t=292s
+ 9821017929
+  <base href="/isso/#/">
+http://localhost/isso-php/IfsSchool/getIfsSchoolAmount/
+https://issoindia.com/isso-php/IfsSchool/getIfsSchoolAmount/
+
+candidate scanned sign issue.
+DOB in words
+View PDF if 
+
+Head Master/Principle Sign
+You have already made payment please connect with ISSO admin for more details !
+ 
+ 
+ https://issoindia.com/isso-php/Sgfipdf/sgfiViewPdf/22460/306/1
+ https://issoindia.com/checkmergepdf/isso-php/Sgfipdf/sgfiViewPdf/22460/306/1
+ 
+ 
+ file:///F:/Template/Reveal/Reveal/index.html
+ M
+ 
+  SELECT `sgm`.`studentName`,`game`.`gameName`,`school`.`schoolName`,`student`.`payAmount`
+ FROM `tbl_sgfi_payment` as `student`
+ LEFT JOIN `tbl_students` AS `sgm` ON `student`.`studentId` =`sgm`.`sId`
+ LEFT JOIN `tbl_game` AS `game` ON `student`.`gameId`=`game`.`gameId`
+ LEFT JOIN `tbl_school` AS `school` ON `student`.`schoolId` = `school`.`schoolId`;
+ 
+ 1.How many  years certificates ,profiles visible for parents.
+ 2.How we download team event candidate for student.
+ 3.For autocomplete for next year how we show student data (photo,t-shirt size).
+ 4.If any student dont have unique ID then
+ 
+ 
+  
+ 

@@ -1,0 +1,44 @@
+.pendig-state {
+  background-color: red;
+  color: white;
+}
+.active-state {
+  background-color: green;
+  color: white;
+}
+
+:host ::ng-deep .custom-toast .ui-toast-close-icon {
+  padding-top: 10px;
+  padding-right: 15px;
+  color: #ffffff;
+}
+.search-text {
+  width: 60%;
+}
+.test-text {
+  color: white;
+}
+:host ::ng-deep .custom-toast .ui-toast-message {
+  color: #ffffff;
+  background: blue;
+  border-radius: 20px;
+  padding-top: 8px;
+  width: 120%;
+}
+.align-submit {
+  margin: 10px;
+}
+.table-row {
+  background: blue;
+  color: white;
+}
+
+.isMenuActive {
+  background: #007ad9;
+  color: white;
+}
+.ev-name1 {
+  width: 85%;
+  margin-top: 0;
+  margin-bottom: 0;
+}

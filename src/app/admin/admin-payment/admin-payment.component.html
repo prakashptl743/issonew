@@ -1,0 +1,111 @@
+<div class="ui-g-12">
+  <div class="ui-g-4 align-drop-down">
+    <p-dropdown
+      [options]="yearOptions"
+      placeholder="Select Year"
+      (onChange)="onyeareChange($event)"
+      [(ngModel)]="selectedYear"
+      [style]="{ 'min-width': '140px' }"
+    ></p-dropdown>
+  </div>
+  <!-- <div class="ui-g-4">
+    <p-dropdown  [options]="monthOptions"  placeholder="Select Month" (onChange)="onyeareChange($event)" [(ngModel)]="selectedMonth" [style]="{'min-width':'140px'}"></p-dropdown>
+  </div> -->
+  <div class="ui-g-2 align-drop-down">
+    <p-calendar
+      [(ngModel)]="date"
+      view="month"
+      dateFormat="mm/yy"
+      (ngModelChange)="onMonthChange(date)"
+      [readonlyInput]="true"
+    ></p-calendar>
+  </div>
+  <div class="col-md-4">
+    <div class="form-group pad-zero">
+      <p-dropdown
+        [options]="feeOptions"
+        [(ngModel)]="feeType"
+        placeholder="Select Fee Type"
+        (onChange)="onPaymentTypeChange($event)"
+        [style]="{ 'min-width': '140px' }"
+      ></p-dropdown>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <button
+      class="align-game-button"
+      type="button"
+      [disabled]="!isDataAvailble"
+      (click)="exportAsXLSX()"
+      pButton
+      label="Download Excel"
+    ></button>
+  </div>
+  <table class="table" *ngIf="isDataAvailble">
+    <thead>
+      <tr>
+        <th>Sr No.</th>
+        <th>School Name</th>
+        <th>Payment Type</th>
+        <th>Payment ID</th>
+        <th>Paid Date</th>
+        <th>Paid Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let event of paymentData; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ event.schoolName }}</td>
+        <td
+          *ngIf="
+            event.paymentType == 'affilation' ||
+            event.paymentType == 'kit' ||
+            event.paymentType == 'misc'
+          "
+        >
+          <span *ngIf="event.paymentType == 'affilation'">Affilation</span>
+          <span *ngIf="event.paymentType == 'kit'">KIT</span>
+          <span *ngIf="event.paymentType == 'misc'">Miscellaneous</span>
+        </td>
+        <td *ngIf="feeType == 'participation'">Participation</td>
+        <td
+          *ngIf="
+            event.paymentType == 'affilation' ||
+            event.paymentType == 'kit' ||
+            event.paymentType == 'misc'
+          "
+        >
+          {{ event.paymentId }}
+        </td>
+        <td *ngIf="feeType == 'participation'">N/A</td>
+
+        <td
+          *ngIf="
+            event.paymentType == 'affilation' ||
+            event.paymentType == 'kit' ||
+            event.paymentType == 'misc'
+          "
+        >
+          {{ event.paydate | date : "d MMMM , y" }}
+        </td>
+        <td *ngIf="feeType == 'participation'">N/A</td>
+
+        <td>
+          <span class="float-right">{{ event.payAmount }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="isDataAvailble" class="totalAmount">
+    <span style="margin-right: 10px">Total Earning</span>
+    <!-- {{ paymentData | sum : "payAmount" | currency : "INR" }} -->
+
+    {{ paymentData | sum : "payAmount" | indianCurrency }}
+  </div>
+</div>
+<p-toast
+  [style]="{ marginTop: '50px' }"
+  styleClass="toast-body custom-toast"
+  key="custom"
+  position="bottom-center"
+></p-toast>

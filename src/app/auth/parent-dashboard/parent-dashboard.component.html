@@ -1,0 +1,386 @@
+<nav class="navbar navbar-expand-lg navbar-dark fancy-navbar">
+  <div class="">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse float-end" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a
+            [ngClass]="menuLabel == 'dashboard' ? 'active' : ''"
+            class="nav-link fancy-link"
+            aria-current="page"
+            (click)="changeMenu('dashboard')"
+            data-page="home"
+            ><i class="bi bi-house-door-fill"></i> DASHBOAD</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            [ngClass]="menuLabel == 'certificate' ? 'active' : ''"
+            class="nav-link fancy-link"
+            (click)="changeMenu('certificate')"
+            data-page="features"
+            ><i class="bi bi-award"></i> CERTIFICATE</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            [ngClass]="menuLabel == 'profile' ? 'active' : ''"
+            class="nav-link fancy-link"
+            (click)="changeMenu('profile')"
+            data-page="data"
+            ><i class="bi bi-person-check"></i>PROFILE</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            (click)="changeMenu('exit')"
+            class="nav-link fancy-link"
+            data-page="info"
+            ><i class="bi bi-box-arrow-right"></i>EXIT</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <div *ngIf="menuLabel == 'certificate'">
+    <certificate-dashboard [studentData]="studentData"></certificate-dashboard>
+  </div>
+  <div *ngIf="menuLabel == 'profile'">
+    <!-- <button class="edit-button" (click)="editStudent(studentData)">
+      Edit Profile
+    </button> -->
+    <div class="" *ngIf="studentData[0]">
+      <div class="table-responsive no-borer" *ngIf="studentData[0]">
+        <table class="table table-bordered table-striped">
+          <tbody>
+            <tr>
+              <th><strong>Student Name:</strong></th>
+              <td>{{ studentData[0].studentName }}</td>
+              <th><strong>Father Name:</strong></th>
+              <td>{{ studentData[0].fatherName }}</td>
+            </tr>
+            <tr>
+              <th><strong>Date of Birth:</strong></th>
+              <td>{{ studentData[0].dateOfBirth | date : "dd-MMM-yyyy" }}</td>
+              <th><strong>Gender:</strong></th>
+              <td>{{ studentData[0].gender == "1" ? "Boys" : "Girls" }}</td>
+            </tr>
+            <tr>
+              <th><strong>Class:</strong></th>
+              <td>{{ studentData[0].standardClass }}</td>
+              <th><strong>Aadhar No:</strong></th>
+              <td>{{ studentData[0].aadharNumber }}</td>
+            </tr>
+            <tr>
+              <th><strong>Contact No:</strong></th>
+              <td>{{ studentData[0].contactNo }}</td>
+              <th><strong>Admission No:</strong></th>
+              <td>{{ studentData[0].admissionNumber }}</td>
+            </tr>
+            <tr>
+              <th><strong>T-Shirt Size:</strong></th>
+              <td>{{ studentData[0].tShirtSize }}</td>
+              <th><strong>Curriculum:</strong></th>
+              <td>{{ studentData[0].curruclm }}</td>
+            </tr>
+            <tr>
+              <th><strong>Passport:</strong></th>
+              <td>
+                {{
+                  studentData[0].passport === ""
+                    ? "N/A"
+                    : studentData[0].passport
+                }}
+              </td>
+              <th><strong>Registered Date:</strong></th>
+              <td>{{ studentData[0].createdDate | date : "dd-MMM-yyyy" }}</td>
+            </tr>
+            <tr>
+              <th><strong>School Name:</strong></th>
+              <td>{{ studentData[0].schoolName }}</td>
+              <th><strong>Student ID:</strong></th>
+              <td>{{ studentData[0].studentUniqueId }}</td>
+            </tr>
+            <tr>
+              <th><strong>Photo:</strong></th>
+              <td>
+                <img
+                  height="50"
+                  width="50"
+                  src="{{ setPhotoYear }}/{{ studentData[0].photo }}"
+                  (error)="onImageError($event)"
+                />
+              </td>
+              <th><strong>Status:</strong></th>
+              <td
+                [ngClass]="
+                  studentData[0].approvedStatus == '0'
+                    ? 'isPending'
+                    : 'isApproved'
+                "
+              >
+                {{
+                  studentData[0].approvedStatus == "0" ? "Pending" : "Approved"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main-content-wrapper">
+  <div class="container py-5" *ngIf="menuLabel == 'dashboard'">
+    <div
+      *ngIf="studentDataLength > 0"
+      class="fancy-section p-5 mb-5 animate__animated"
+    >
+      <h4 class="text-center mb-5 text-dark">CURRENT EVENTS</h4>
+      <div class="row g-4">
+        <div
+          class="col-md-4"
+          *ngFor="let student of studentProfileData; let i = index"
+        >
+          <div
+            class="fancy-feature-card h-100"
+            *ngIf="student.event_status === '1' && student.startDate > today"
+          >
+            <!-- <i class="bi bi-speedometer2 feature-icon"></i> -->
+            <div class="text-center">
+              <img
+                class="rounded-circle"
+                height="70"
+                width="70"
+                src="{{ setPhotoYear }}/{{ student.photo }}"
+                (error)="onImageError($event)"
+              />
+            </div>
+            <h4 class="card-title mt-3">{{ student.eventName }}</h4>
+            <h4>{{ student.studentName }}</h4>
+            <p class="card-text">
+              {{ student.gameName }} UNDER {{ student.ageRange }}
+              {{ student.gender == "1" ? "Boys" : "Girls" }}
+            </p>
+
+            <p>
+              <ng-container
+                *ngIf="student.rootSubGame !== null; else showSubGame"
+              >
+                <div
+                  class="subgame-color"
+                  *ngFor="
+                    let sub of getFilteredSubgames(student.subGameName);
+                    let i = index
+                  "
+                >
+                  Subgame: {{ i + 1 }}. {{ sub }}
+                </div>
+              </ng-container>
+
+              <ng-template #showSubGame>
+                <div
+                  *ngFor="
+                    let sub of getFilteredSubgames(student.subGameName);
+                    let i = index
+                  "
+                >
+                  Subgame: {{ i + 1 }}. {{ sub }}
+                </div>
+              </ng-template>
+            </p>
+            <button
+              *ngIf="student.paidStatus == ''"
+              class="btn btn-warning btn-block"
+              type="button"
+              (click)="
+                payNow(
+                  student.isAffiliate == 'Yes'
+                    ? student.price
+                    : student.price * 2,
+                  student
+                )
+              "
+            >
+              PAY NOW
+              {{
+                student.isAffiliate == "Yes" ? student.price : student.price * 2
+              }}
+              Rs.
+            </button>
+            <span
+              *ngIf="student.paidStatus == 'Yes'"
+              class="pe-none btn btn-success btn-block"
+            >
+              PAID
+              {{
+                student.isAffiliate == "Yes" ? student.price : student.price * 2
+              }}
+              Rs.</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container my-5" *ngIf="studentDataLength == '0'">
+      <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+          <div class="no-data-found-container p-5 text-center">
+            <div class="icon-wrapper mb-4">
+              <i class="bi bi-exclamation-triangle-fill animated-icon"></i>
+            </div>
+            <h2 class="display-5 fw-bold text-danger mb-3">No Data Found!</h2>
+            <p class="lead text-muted mb-4">
+              It seems there's no active event match for your profile please try
+              again later or contact school admin .
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-toast
+  [style]="{ marginTop: '50px' }"
+  styleClass="custom-toast"
+  key="custom"
+  position="bottom-center"
+></p-toast>
+<!-- <div class="container mt-5">
+  <h1>My Application Content</h1>
+  <p>This is where your table and other elements would be.</p>
+  <button class="btn btn-primary" (click)="toggleLoader()">
+    Toggle Loader
+  </button>
+</div> -->
+
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="pulsing-dots">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+<p-dialog
+  header="{{ dialogTitle }}"
+  [(visible)]="display"
+  [modal]="true"
+  [responsive]="true"
+  [baseZIndex]="10000"
+  [width]="800"
+>
+  <div *ngIf="editStudentData">
+    <form
+      [formGroup]="editStudentForm"
+      (ngSubmit)="onSubmit()"
+      class="p-4 border rounded shadow"
+    >
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label>Admission Number</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="admissionNumber"
+          />
+          <div
+            *ngIf="f.admissionNumber.touched && f.admissionNumber.invalid"
+            class="text-danger"
+          >
+            Admission Number is required
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label>Curriculum</label>
+          <input type="text" class="form-control" formControlName="curruclm" />
+          <div
+            *ngIf="f.curruclm.touched && f.curruclm.invalid"
+            class="text-danger"
+          >
+            Curriculum is required
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label>T-Shirt Size</label>
+          <select
+            class="custom-dropdown form-control"
+            formControlName="tShirtSize"
+          >
+            <option *ngFor="let t of tShirtSize" [value]="t.value">
+              {{ t.label }}
+            </option>
+          </select>
+          <div
+            *ngIf="f.tShirtSize.touched && f.tShirtSize.invalid"
+            class="text-danger"
+          >
+            T-Shirt size is required
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label>Standard</label>
+          <select
+            class="custom-dropdown form-control"
+            formControlName="standardClass"
+          >
+            <option *ngFor="let c of standardClass" [value]="c.value">
+              {{ c.label }}
+            </option>
+          </select>
+          <div
+            *ngIf="f.standardClass.touched && f.standardClass.invalid"
+            class="text-danger"
+          >
+            Standard class is required
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Upload Photo</label>
+          <input
+            type="file"
+            class="form-control"
+            formControlName="photo"
+            accept="image/png, image/jpeg"
+            (change)="onFileSelect($event)"
+          />
+          <small class="text-danger" *ngIf="fileError">{{ fileError }}</small>
+        </div>
+        <div class="col-md-6">
+          <div class="text-center mt-2" *ngIf="imagePreview">
+            <img [src]="imagePreview" class="img-thumbnail" width="60" />
+          </div>
+        </div>
+      </div>
+
+      <div class="text-end">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="editStudentForm.invalid"
+        >
+          Update
+        </button>
+      </div>
+    </form>
+  </div>
+</p-dialog>

@@ -1,0 +1,253 @@
+ 
+ 
+<div class="row" style="padding:0 10px 10px 10px;" *ngIf="showDropDown">
+
+  <div class="ui-g-12">
+      <button class="btn btn-primary float-right" *ngIf="display" (click)="hideExtraView()">Back</button>
+  </div>
+   <div class="ui-g-12 ui-md-2">
+      <p-dropdown  [options]="yearOptions"  [(ngModel)]="yearvalue"  (onChange)="onyearChange($event)" [style]="{'min-width':'140px'}"></p-dropdown>
+   </div>
+   <div class="ui-g-12 ui-md-4">
+      <p-dropdown [disabled]="!eventReadableCoach" [(ngModel)]="eventIdForStudent"  [options]="eventOptions"  placeholder="Select Event" (onChange)="onEventChange($event)" [style]="{'min-width':'140px'}"></p-dropdown>
+   </div>
+   <div class="ui-g-12 ui-md-4">
+      <p-dropdown [disabled]="!schoolReadble"  [(ngModel)]="schoolvalue" [options]="schoolOptions" [(ngModel)]="selectedSchool"  placeholder="Select School" (onChange)="loadStudentData($event)" [style]="{'min-width':'140px'}"></p-dropdown>
+  </div>
+  <div class="ui-g-12 ui-md-2">
+  <button *ngIf="!display" type="button" (click)="addNewStudent($event, '','add')" pButton label="Add New Coach"></button>
+</div>
+
+
+</div>
+<div *ngIf="showStudentCount" class ="pad-bottom" style="color: #832161;">
+  <h4>Total number of Coach:{{studentCount}}</h4>
+</div>
+<div class="wrapper">
+<div id="content1" class="content-wrapper">
+<p-toast [style]="{marginTop: '50px'}" styleClass="custom-toast" key="custom" position="bottom-center"></p-toast>
+
+<div class="sub-view-wrapper" *ngIf="display">
+<form [formGroup]="schoolForm"  class="align-form-div" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <div class="ui-g-12">
+      <button class="btn btn-primary" *ngIf="display" (click)="hideExtraView()">Back</button>
+    </div>
+      <div class="form-group col-md-6"  *ngIf="!isEditStudent">
+        <label for="inputEmail4" >Select Year</label> 
+        <p-dropdown    [options]="yearOptions" [(ngModel)]="selectedYear" formControlName="studentYear"   placeholder="Select Year" (onChange)="onyearChange($event)" [style]="{'min-width':'140px'}"></p-dropdown>
+      </div>
+      <div class="form-group col-md-6"  *ngIf="isEditStudent">
+        <label for="inputEmail4">Student Year</label>
+        <div><span>{{eventYear}}</span></div>
+       </div>
+
+
+      <div class="form-group col-md-6" *ngIf="!isEditStudent">
+        <label for="inputPassword4">Select Event</label>
+        <p-dropdown [disabled]="!eventReadable"   formControlName="studentEvent" [(ngModel)]="selectedEvent" [options]="eventOptions"  placeholder="Select Event" (onChange)="onEventChangeForStudent($event)" [style]="{'min-width':'140px'}"></p-dropdown>
+      </div>
+      <div class="form-group col-md-6"  *ngIf="isEditStudent">
+        <label for="inputPassword4">Event Name</label>
+        <div><span>{{eventName}}</span></div>
+      </div>
+
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6" *ngIf="!isEditStudent">
+      <label for="inputEmail4">Select Game</label>
+      <p-dropdown [disabled]="!gameReadble" formControlName="studentGame" [(ngModel)]="selectedGame" [options]="gameOptions"  placeholder="Select Game" (onChange)="loadGameChange($event)" [style]="{'min-width':'140px'}"></p-dropdown>
+    </div>
+    <div class="form-group col-md-6" *ngIf="isEditStudent">
+      <label for="inputEmail4">Game Name</label>
+      <div><span>{{gameNameForEditStudent}}</span></div>
+    </div>
+
+    <div class="form-group col-md-6"   *ngIf="!isEditStudent">
+      <label for="inputEmail4">Select Age</label>
+      <p-dropdown  [disabled]="!ageReadble" formControlName="studentAge" [(ngModel)]="selectedAge" [options]="ageOptions" (onChange)="loadAgeChange()" placeholder="Select Age"  [style]="{'min-width':'20px'}"></p-dropdown>
+    </div>
+
+    <div class="form-group col-md-6"   *ngIf="isEditStudent">
+      <label for="inputEmail4">Select Age</label>
+      <p-dropdown  formControlName="studentAge" [(ngModel)]="selectedAge" [options]="ageOptions" (onChange)="changeAge($event)" placeholder="Select Age"  [style]="{'min-width':'20px'}"></p-dropdown>
+    </div>
+    
+</div>
+  <div class="form-row">
+    <div class="form-group col-md-6" *ngIf="!isEditStudent">
+      <label for="inputPassword4">Select Gender</label>
+      <p-dropdown  [disabled]="!genderReadble"  formControlName="studentGender" [(ngModel)]="selectedGender"  [options]="genderOptions" (onChange)="loadGenerChange()"   placeholder="Select Gender"  [style]="{'min-width':'20px'}"></p-dropdown>
+    </div>
+    <div class="form-group col-md-6"  *ngIf="isEditStudent">
+      <label for="inputPassword4">Gender</label>
+      <div><span>{{genderValue}}</span></div>
+     </div>
+
+     <div class="form-group col-md-6" *ngIf="!isEditStudent && isAddNewStudent">
+      <label for="inputEmail4" style="display: block;">School Name</label>
+      <p-autoComplete [(ngModel)]="schoolName"   formControlName="schoolName"  [suggestions]="filteredPages" (completeMethod)="filterPages($event)" field="text"
+         placeholder="Enter school Name"  [size]="100" emptyMessage = "School Not found" [minLength]="1" (blur)="formChanged($event)" (onSelect)="onPageSelect($event)">
+     
+         <ng-template let-brand pTemplate="item">
+             <div class="ui-helper-clearfix" style="border-bottom:1px solid #D5D5D5">
+                 <div style="font-size:14px;float:left;margin:10px">
+                     {{brand.text}}
+                 </div>
+                <br/>
+             </div>
+         </ng-template>
+     </p-autoComplete>
+
+
+      <!-- <input class="form-control" [(ngModel)]="schoolName" formControlName="schoolName" name="schoolName" type="text" required> -->
+    </div>
+   
+</div>
+
+ 
+   
+<div *ngIf="isAddNewStudent">
+  <div class="form-row">
+    
+      <div class="form-group col-md-6" *ngIf="isEditStudent">
+        <label for="inputEmail4">School Name</label>
+        <div><span>{{schoolName}}</span></div>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="inputPassword4">Coach Name</label>
+        <input class="form-control" [(ngModel)]="student_Name" formControlName="studentName" name="studentName" (blur)="formChanged($event)"  type="text" required>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="inputEmail4">Father's/Mother's Name:</label>
+        <input class="form-control" [(ngModel)]="father_Name" formControlName="fatherName" (blur)="formChanged($event)" name="fatherName"  type="text" required>
+    </div>
+  </div>
+  <div class="form-row">
+ 
+      <div class="form-group col-md-6">
+        <label class="form-control-label">Upload Photo</label>
+        <img *ngIf="isEditStudent && isValidFile" height="50" width="50" src="{{setPhotoYear}}//{{studentPhoto}}">
+        <img class="align-image" *ngIf="url != ''  && isValidFile" [src]="url" >
+        <input type="file" id="my-input" [(ngModel)]="selectedProfile" formControlName="profile" (change)="onFileSelected($event)" class="form-control">
+        <span class="file-hint">Please upload file below 100 KB</span>
+          <div *ngIf="!isValidFile">
+            <span class="error-class">Invalid File type Please select file JPEG,PNG format only</span>
+         </div>
+         <div *ngIf="isFileBig">
+             <span class="error-class">File size too large please select image below 100 KB</span>
+         </div> 
+      </div>
+      <input type="hidden" [(ngModel)]="sId" formControlName="sId" class="form-control"
+      id="inputWarning1">
+      <input style="display: none;" type="text" [(ngModel)]="editStudentPhoto" formControlName="editStudentPhoto" class="form-control"
+      id="inputWarning1">
+
+
+
+  </div>
+ 
+  <div class="form-row">
+ 
+
+
+       
+
+  </div>  
+ 
+  <button *ngIf="!isEditStudent" [disabled]="!isFileUpload" class="btn btn-primary marginR10" type="button" (click)="onSubmit()">Submit</button>
+  <button *ngIf="isEditStudent"   class="btn btn-primary marginR10" type="button" (click)="onSubmit()">Submit</button>
+
+  <button class="btn btn-primary-outline" type="button" (click)="cancelForm()">Cancel</button>
+ </div>
+
+</form>
+</div>
+<div *ngIf="studentCount > 0">
+<p-dataView #dv [paginator]="true" paginatorPosition="bottom" *ngIf="!display && studentGrid"  [rows]="10" [value]="schoolData" class="no-padding" filterBy="coachName,gameName" [sortField]="sortField" [sortOrder]="sortOrder" layout="grid">
+ <p-header>
+    <div class="ui-helper-clearfix">
+        <div class="ui-g">
+             <div class="ui-g-12 ui-md-12 filter-container">
+                  <div>
+                      <input class="search-text" type="search" pInputText placeholder="Search by Name" (input)="dv.filter($event.target.value, 'coachName', 'contains')">
+                   
+                  </div>
+
+            </div>
+        </div>
+    </div>
+</p-header>
+ 
+<ng-template let-school pTemplate="gridItem"  style="word-wrap: break-word;">
+    <div style="padding:.5em" class="ui-g-12 ui-md-6">
+      <div class="item-box">
+          <div class="item-header1"> 
+              <img class ="img-circle" src="{{setPhotoYear}}/{{school.coachPhoto}}"  height="70" width="70"  alt="banner" />
+              <h4 class="align-coach-name" title="{{school.name}}">{{school.coachName}}</h4>
+              <div class="icons-wrap">
+                  <button class="glyphicon glyphicon-edit item-icons" (click)="addNewStudent($event, school,'edit')">
+                  </button>
+                   <button href="#" class="glyphicon glyphicon-trash item-icons" (click)="deleteCoachData($event, school)">
+                  </button>
+                  
+              </div>
+          </div>
+    
+          <div class="item-description">
+              <label>Coach ID:</label>
+              <span class="item-value">{{school.id}}</span>
+          </div>
+        
+          <div class="item-description">
+              <label>Father Name:</label>
+              <span class="item-value">{{school.coachFatherName}}</span>
+          </div>
+          
+         
+          <div class="item-description">
+              <label>Age Range:</label>
+              <span class="item-value">{{school.ageRange}}</span>
+          </div>
+         
+          <div class="item-description">
+              <label>Game Name:</label>
+              <span class="item-value">{{school.gameName}}</span>
+          </div>
+          
+           <div class="item-description">
+              <label>Event Name:</label>
+              <div class="item-parent">
+                  <div class="item-value" title="{{school.eventName}}">{{school.eventName}}</div>
+              </div>
+          </div>
+           <div class="item-description">
+              <label>School Name:</label>
+              <div class="item-parent">
+                  <div class="item-value">{{school.schoolName}}</div>
+              </div>
+          </div>
+           <div class="item-description lastChild">
+              <label>Enrollment date:</label>
+              <span class="item-value">{{school.createdDate | date: 'd MMMM , y'}}</span>
+          </div>
+      </div>
+  </div>  
+</ng-template>
+</p-dataView>
+</div>
+<p-confirmDialog key="confirm-delete-school" header="Delete Student Data" acceptLabel="Yes" rejectLabel="No"></p-confirmDialog>
+<p-dialog header="Add New School" [(visible)]="displayDialog"  showEffect="fade" [modal]="true" [responsive]="true"   
+[maximizable]="true" [baseZIndex]="10000">
+<h5>Edit school</h5>
+<p-footer>
+    <p-button icon="pi pi-check" [disabled]="!schoolForm.valid"  label="Submit" (onClick)="onSubmit()"></p-button>
+   <button type="button" pButton icon="pi pi-close" (click)="display=false" label="No" class="ui-button-secondary"></button>
+</p-footer>
+
+
+</p-dialog>    
+</div>
+</div>
+

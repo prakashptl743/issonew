@@ -1,0 +1,83 @@
+input.largerCheckbox {
+  transform: scale(2);
+}
+.not-paid-column {
+  background: red;
+  color: white;
+  text-align: center;
+}
+.align-checkbox {
+  text-align: center;
+}
+.border-rad {
+  border-radius: 7px;
+}
+.align-tot-amount {
+  margin-right: 20px;
+}
+.align-button {
+  padding-top: 30px;
+}
+.align-drop-down {
+  padding: 0 0 0 20px;
+}
+.paid-column {
+  background: green;
+  color: white;
+  text-align: center;
+}
+.table-color {
+  color: #fff;
+  background-color: #007ad9;
+}
+:host ::ng-deep .custom-toast .ui-toast-message {
+  color: #ffffff;
+  background: blue;
+  border-radius: 20px;
+  padding-top: 8px;
+  width: 150%;
+}
+:host ::ng-deep .custom-toast .ui-toast-close-icon {
+  position: absolute;
+  font-size: 2em;
+  top: 11px;
+  text-decoration: none;
+}
+.align-message {
+  padding: 8px;
+}
+.isMenuActive {
+  background: #007ad9;
+  color: white;
+}
+
+.totalAmount {
+  color: green;
+  font-weight: bold;
+  float: right;
+}
+.float-right {
+  float: right;
+}
+:host ::ng-deep .ui-toast .ui-toast-icon {
+  padding-top: 4px;
+}
+/* :host ::ng-deep .custom-toast .ui-toast-close-icon {
+    padding-top: 10px;
+    padding-right: 15px;
+    color: #ffffff;
+} */
+
+:host ::ng-deep .custom-toast .ui-toast .ui-toast-message-text-content {
+  margin-left: 2.5em;
+}
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th {
+  background: #007ad9;
+  color: white;
+}

@@ -1,0 +1,203 @@
+<section class="our-webcoderskull"></section>
+
+<div class="container">
+  <div class="">
+    <div class="col-md-6">
+      <div>Select Year:</div>
+      <p-dropdown
+        [options]="yearOptions"
+        [(ngModel)]="selectedYear"
+        placeholder="Select Year"
+        (onChange)="onyeareChange($event)"
+        [style]="{ 'min-width': '140px' }"
+      ></p-dropdown>
+    </div>
+    <div class="col-md-6">
+      <!-- <div class="text-center mb-4 text-dark">Download Certificate Here</div> -->
+    </div>
+  </div>
+
+  <div class="table-responsive" *ngIf="studentDataLength > 0">
+    <table class="table fancy-table align-middle">
+      <thead>
+        <tr>
+          <th scope="col">Sr No.</th>
+          <th scope="col">Event Name</th>
+          <th scope="col">Student Name</th>
+          <th scope="col">Certificate Details</th>
+          <th scope="col">Participation</th>
+          <th scope="col">Merit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of studentProfileData; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ student.eventName }}</td>
+          <td>{{ student.studentName }}</td>
+
+          <!-- Certificate Details -->
+          <td>
+            {{ student.gameName }} Under {{ student.ageRange }}
+            {{ student.gender == "1" ? "Boys" : "Girls" }}
+          </td>
+
+          <!-- Participation -->
+          <td>
+            <div *ngIf="student.isCertificate == '0'">
+              <span class="cert-intro badge bg-warning fancy-badge"
+                >Certificate Not Uploaded</span
+              >
+            </div>
+            <div *ngIf="student.isCertificate == '1'">
+              <a
+                class="btn btn-primary btn-sm certificate-font"
+                href="{{
+                  baseUrl
+                }}/staffadmin/studentProfile/studentCertificate/individualCertificate/{{
+                  student.schoolId
+                }}/{{ student.eventId }}/{{ student.gameId }}/{{
+                  student.ageRange
+                }}/{{ student.gender }}/{{ student.sId }}/participate/{{
+                  student.rootGameType
+                }}/noid/Nosubgame"
+              >
+                <i class="bi bi-download"></i> Download
+              </a>
+            </div>
+          </td>
+
+          <!-- Merit -->
+          <td>
+            <div *ngIf="student.isMerit == '0'">
+              <span class="cert-intro badge bg-warning fancy-badge"
+                >Certificate Not Uploaded</span
+              >
+            </div>
+            <div *ngIf="student.isMerit == '1' && student.meritQR !== null">
+              <div *ngIf="student.rootGameType == 'Team'">
+                <a
+                  class="btn btn-success btn-sm certificate-font"
+                  href="{{
+                    baseUrl
+                  }}/staffadmin/studentProfile/studentCertificate/individualCertificate/{{
+                    student.schoolId
+                  }}/{{ student.eventId }}/{{ student.gameId }}/{{
+                    student.ageRange
+                  }}/{{ student.gender }}/{{ student.sId }}/merit/{{
+                    student.rootGameType
+                  }}/noid/Nosubgame"
+                >
+                  <i class="bi bi-download"></i> Download Merit Certificate
+                </a>
+              </div>
+              <div *ngIf="student.rootGameType == 'Individual'">
+                <a
+                  class="btn btn-success btn-sm certificate-font"
+                  href="{{
+                    baseUrl
+                  }}/staffadmin/studentProfile/studentCertificate/individualCertificate/{{
+                    student.schoolId
+                  }}/{{ student.eventId }}/{{ student.gameId }}/{{
+                    student.ageRange
+                  }}/{{ student.gender }}/{{ student.sId }}/merit/{{
+                    student.rootGameType
+                  }}/noid/Nosubgame"
+                >
+                  <i class="bi bi-download"></i> Download Merit Certificate
+                </a>
+              </div>
+            </div>
+            <div
+              *ngIf="
+                (student.isMerit == '1' && student.meritQR === null) ||
+                student.meritQR === ''
+              "
+            >
+              <span class="badge bg-secondary">N/A</span>
+            </div>
+
+            <div *ngIf="student.isMerit == '1' && hasSubgames(student)">
+              <ul class="list-unstyled mb-0">
+                <li *ngFor="let key of getSubgameKeys(student)">
+                  <div *ngFor="let sg of student[key]">
+                    <span class="text-muted small d-block mb-1"
+                      >SubGame: {{ sg.subGameName }}</span
+                    >
+                    <a
+                      class="btn btn-success btn-sm mb-2 certificate-font"
+                      *ngIf="
+                        sg.meritQR !== null &&
+                        sg.meritQR !== '' &&
+                        sg.gameType !== 'Team'
+                      "
+                      href="{{
+                        baseUrl
+                      }}/staffadmin/studentProfile/studentCertificate/individualCertificate/{{
+                        student.schoolId
+                      }}/{{ student.eventId }}/{{ student.gameId }}/{{
+                        student.ageRange
+                      }}/{{ student.gender }}/{{ student.sId }}/merit/{{
+                        student.rootGameType
+                      }}/{{ sg.id }}/{{ sg.subGameName }}"
+                    >
+                      <i class="bi bi-download"></i>Download Merit Certificate
+                    </a>
+
+                    <a
+                      class="btn btn-success btn-sm mb-2 certificate-font"
+                      *ngIf="
+                        sg.meritQR !== null &&
+                        sg.meritQR !== '' &&
+                        sg.gameType == 'Team'
+                      "
+                      href="{{
+                        baseUrl
+                      }}/staffadmin/studentProfile/studentCertificate/printTeamSubgameCertificate/{{
+                        student.schoolId
+                      }}/{{ student.eventId }}/{{ student.gameId }}/{{
+                        student.ageRange
+                      }}/{{ student.gender }}/{{ student.sId }}/merit/{{
+                        student.rootGameType
+                      }}/{{ sg.id }}/{{ sg.subGameName }}"
+                    >
+                      <i class="bi bi-download"></i>Download Merit Certificate
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="container my-5" *ngIf="studentDataLength == '0'">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <div class="no-data-found-container p-5 text-center">
+        <div class="icon-wrapper mb-4">
+          <i class="bi bi-exclamation-triangle-fill animated-icon"></i>
+        </div>
+        <h2 class="display-5 fw-bold text-danger mb-3">No Data Found!</h2>
+        <p class="lead text-muted mb-4">
+          It seems there's no certificate data found for selected academic year.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast
+  [style]="{ marginTop: '50px' }"
+  styleClass="custom-toast"
+  key="custom"
+  position="bottom-center"
+></p-toast>
+
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="pulsing-dots">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>

@@ -1,0 +1,606 @@
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="pulsing-dots">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+
+<div class="bg-image">
+  <div class="container mt-4">
+    <div class="card shadow-lg custom-rounded">
+      <div class="row text-center border-bottom p-3 bg-color">
+        <div
+          class="col underline-text border-right"
+          (click)="changeMenu('enroll')"
+        >
+          Student Enrollment Form
+        </div>
+        <div class="col underline-text" (click)="changeMenu('issoId')">
+          Having Already ISSO ID
+        </div>
+      </div>
+      <h2 class="text-center text-primary mb-4"></h2>
+
+      <form
+        [formGroup]="studentForm"
+        (ngSubmit)="onSubmit()"
+        *ngIf="isStudentEnrollForm && !validStudentId"
+      >
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">Student Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="studentName"
+              (blur)="studentForm.controls.studentName.markAsTouched()"
+              placeholder="Enter student name"
+            />
+            <div
+              class="text-danger"
+              *ngIf="
+                studentForm.controls.studentName.touched &&
+                studentForm.controls.studentName.invalid
+              "
+            >
+              Name is required (min 3 characters).
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">Father Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="fatherName"
+              (blur)="studentForm.controls.fatherName.markAsTouched()"
+              placeholder="Enter father's name"
+            />
+            <div
+              class="text-danger"
+              *ngIf="
+                studentForm.controls.fatherName.touched &&
+                studentForm.controls.fatherName.invalid
+              "
+            >
+              Father name is required (min 3 characters).
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">Admission No</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="admissionNo"
+              (blur)="studentForm.controls.admissionNo.markAsTouched()"
+              placeholder="Enter admission number"
+            />
+            <div
+              class="text-danger"
+              *ngIf="
+                studentForm.controls.admissionNo.touched &&
+                studentForm.controls.admissionNo.invalid
+              "
+            >
+              Admission No should be alphanumeric.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">School Name</label>
+            <p-autoComplete
+              [(ngModel)]="schoolName"
+              [style]="{ width: '100%' }"
+              class="p-autocomplete"
+              formControlName="schoolName"
+              [suggestions]="filteredPages"
+              (completeMethod)="filterPages($event)"
+              field="text"
+              placeholder="Enter school Name"
+              emptyMessage="School Not found"
+              [minLength]="1"
+              (onSelect)="onPageSelect($event)"
+            >
+              <ng-template let-brand pTemplate="item">
+                <div
+                  class="ui-helper-clearfix"
+                  style="border-bottom: 1px solid #d5d5d5"
+                >
+                  <div style="font-size: 14px; float: left; margin: 10px">
+                    {{ brand.text }}
+                  </div>
+                  <br />
+                </div>
+              </ng-template>
+            </p-autoComplete>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">Class</label>
+            <p-dropdown
+              placeholder="Please Select"
+              [options]="standardClass"
+              size="30"
+              formControlName="class"
+            ></p-dropdown>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold"
+              >Government ID (Aadhaar or Passport)</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              formControlName="adharNo"
+              (input)="convertToUppercase($event)"
+              (blur)="
+                verifyGovId(); studentForm.controls.adharNo.markAsTouched()
+              "
+              placeholder="Enter Government ID"
+            />
+            <div class="text-danger" *ngIf="errorMessage !== ''">
+              {{ errorMessage }}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">Contact No</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="contactNo"
+              (blur)="studentForm.controls.contactNo.markAsTouched()"
+              placeholder="Enter contact number"
+              [(ngModel)]="mobileNumber"
+              (blur)="validateMobile()"
+              [ngClass]="{
+                'is-valid':
+                  isValidMobile && !studentForm.controls.contactNo.invalid,
+                'is-invalid': isInvalidMobile
+              }"
+              [disabled]="loading"
+              (keypress)="allowOnlyNumbers($event)"
+            />
+            <div
+              *ngIf="loading"
+              class="align-loader spinner-border spinner-border-sm text-primary position-absolute"
+              role="status"
+            ></div>
+
+            <div
+              *ngIf="isValidMobile && !loading"
+              class="position-absolute"
+              style="top: 35px; right: 10px"
+            ></div>
+
+            <div *ngIf="isInvalidMobile && !loading" class="text-danger">
+              Mobile number already used 3 times!
+            </div>
+            <div
+              class="text-danger"
+              *ngIf="
+                studentForm.controls.contactNo.touched &&
+                studentForm.controls.contactNo.invalid
+              "
+            >
+              Mobile No must be 10 digits.
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">Date of Birth</label>
+            <!-- <input type="date" class="form-control" formControlName="dob" /> -->
+            <p-calendar
+              formControlName="dob"
+              [minDate]="minDate"
+              [maxDate]="maxDate"
+              dateFormat="dd/mm/yy"
+              [monthNavigator]="true"
+              [yearNavigator]="true"
+              yearRange="{{ minDate.getFullYear() }}:{{
+                maxDate.getFullYear()
+              }}"
+              [style]="{ width: '100%' }"
+              [inputStyle]="{ width: '100%' }"
+              placeholder="Select Date of Birth"
+            ></p-calendar>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">T-Shirt Size</label>
+            <p-dropdown
+              placeholder="Please Select"
+              [options]="tShirtSize"
+              size="30"
+              formControlName="tshirtSize"
+            ></p-dropdown>
+          </div>
+          <div class="col-md-6 mb-4">
+            <label for="inputPassword4">Select Gender</label>
+            <p-dropdown
+              formControlName="studentGender"
+              [options]="genderOptions"
+              placeholder="Select Gender"
+              [style]="{ 'min-width': '20px' }"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">Upload Photo</label>
+            <input
+              type="file"
+              class="form-control"
+              accept="image/png, image/jpeg"
+              (change)="onFileSelect($event)"
+            />
+            <small class="text-danger" *ngIf="fileError">{{ fileError }}</small>
+            <div class="text-center mt-2" *ngIf="imagePreview">
+              <img [src]="imagePreview" class="img-thumbnail" width="80" />
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <label class="form-label fw-bold">Curriculum</label>
+            <!-- <textarea
+              class="form-control"
+              formControlName="curriculum"
+              placeholder="Enter curriculum details"
+            ></textarea> -->
+            <p-dropdown
+              placeholder="Please Select"
+              [options]="curriculum"
+              size="30"
+              formControlName="curriculum"
+            ></p-dropdown>
+          </div>
+        </div>
+
+        <div class="border-bottom">
+          <button
+            type="submit"
+            class="btn btn-primary btn-medium float-end m-3"
+            [disabled]="!isFormValid()"
+          >
+            <i class="bi bi-send-fill"></i> Submit
+          </button>
+        </div>
+      </form>
+
+      <div
+        class="d-flex justify-content-center"
+        *ngIf="!isStudentEnrollForm && !validStudentId"
+      >
+        <form [formGroup]="issoEnrolledForm">
+          <div class="row align-box">
+            <div class="col-md-12 alig-otp-box">
+              <div
+                class="alert alert-success"
+                role="alert"
+                *ngIf="isotpSuccess"
+              >
+                OTP Sent on your registered mobile number
+              </div>
+              <div class="alert alert-danger" role="alert" *ngIf="isotpError">
+                {{ otpErrorMessage }}
+              </div>
+              <div
+                class="alert alert-danger"
+                role="alert"
+                *ngIf="studentErrorMessage && studentError !== ''"
+              >
+                {{ studentError }}
+              </div>
+              <label class="form-label fw-bold">Student ID</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="studentId"
+                (blur)="issoEnrolledForm.controls.studentId.markAsTouched()"
+                placeholder="Enter student ID"
+                [(ngModel)]="studentId"
+                (ngModelChange)="onInputChange()"
+                (input)="studentId = studentId?.toUpperCase()"
+              />
+              <div
+                class="text-danger"
+                *ngIf="
+                  issoEnrolledForm.controls.studentId.touched &&
+                  issoEnrolledForm.controls.studentId.invalid
+                "
+              >
+                Student ID is required.
+              </div>
+              <div class=" ">
+                <button
+                  type="submit"
+                  (click)="onIssoEnrollSubmit()"
+                  class="btn btn-primary btn-medium align-isso-button"
+                  [disabled]="!isEnabled"
+                >
+                  <i class="bi bi-send-fill"></i> Verify Student ID
+                </button>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label fw-bold">OTP</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="otp"
+                (blur)="issoEnrolledForm.controls.otp.markAsTouched()"
+                placeholder="Enter OTP"
+                [(ngModel)]="otp"
+                maxlength="6"
+                [attr.disabled]="otpDisabled ? true : null"
+              />
+              <div
+                class="text-danger"
+                *ngIf="
+                  issoEnrolledForm.controls.otp.touched &&
+                  issoEnrolledForm.controls.otp.invalid
+                "
+              >
+                OTP is required.
+              </div>
+              <div>
+                <button
+                  type="submit"
+                  (click)="verifyOtp()"
+                  class="btn btn-primary btn-medium align-isso-button"
+                  [disabled]="!isIssoFormValid()"
+                >
+                  <i class="bi bi-send-fill"></i> Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast
+  [style]="{ marginTop: '50px' }"
+  styleClass="custom-toast"
+  key="custom"
+  position="bottom-center"
+></p-toast>
+<!-- <div class="container">
+  <h1>Student Subgame Assignment</h1>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Student Name</th>
+        <th>Father Name</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+        <th colspan="3">Assigned Subgames (Min 1, Max 3)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students; let i = index">
+        <td>{{ student.name }}</td>
+        <td>{{ student.fatherName }}</td>
+        <td>{{ student.dateOfBirth }}</td>
+        <td>{{ student.gender }}</td>
+        <td>
+          <select
+            (change)="onSubGameSelectionChange(student, 0, $event)"
+            [ngModel]="student.selectedSubGameIds[0]"
+          >
+            <option value="">-- Select SubGame 1 --</option>
+            <option
+              *ngFor="let subgame of getAvailableSubGames(student, 0)"
+              [value]="subgame.id"
+              [disabled]="
+                currentSubGameCounts[subgame.id] >= subgame.maxCapacity &&
+                subgame.id !== student.selectedSubGameIds[0]
+              "
+            >
+              {{ subgame.name }} (Capacity:
+              {{ currentSubGameCounts[subgame.id] || 0 }}/{{
+                subgame.maxCapacity
+              }})
+            </option>
+          </select>
+        </td>
+        <td>
+          <select
+            (change)="onSubGameSelectionChange(student, 1, $event)"
+            [ngModel]="student.selectedSubGameIds[1]"
+          >
+            <option value="">-- Select SubGame 2 --</option>
+            <option
+              *ngFor="let subgame of getAvailableSubGames(student, 1)"
+              [value]="subgame.id"
+              [disabled]="
+                currentSubGameCounts[subgame.id] >= subgame.maxCapacity &&
+                subgame.id !== student.selectedSubGameIds[1]
+              "
+            >
+              {{ subgame.name }} (Capacity:
+              {{ currentSubGameCounts[subgame.id] || 0 }}/{{
+                subgame.maxCapacity
+              }})
+            </option>
+          </select>
+        </td>
+        <td>
+          <select
+            (change)="onSubGameSelectionChange(student, 2, $event)"
+            [ngModel]="student.selectedSubGameIds[2]"
+          >
+            <option value="">-- Select SubGame 3 --</option>
+            <option
+              *ngFor="let subgame of getAvailableSubGames(student, 2)"
+              [value]="subgame.id"
+              [disabled]="
+                currentSubGameCounts[subgame.id] >= subgame.maxCapacity &&
+                subgame.id !== student.selectedSubGameIds[2]
+              "
+            >
+              {{ subgame.name }} (Capacity:
+              {{ currentSubGameCounts[subgame.id] || 0 }}/{{
+                subgame.maxCapacity
+              }})
+            </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="summary">
+    <h3>Global Subgame Capacity Status:</h3>
+    <ul>
+      <li *ngFor="let subgame of allSubGames">
+        {{ subgame.name }} (ID: {{ subgame.id }}): Current:
+        {{ currentSubGameCounts[subgame.id] || 0 }} / Max:
+        {{ subgame.maxCapacity }}
+        <span
+          *ngIf="currentSubGameCounts[subgame.id] < subgame.minCapacity"
+          class="warning"
+        >
+          (Min: {{ subgame.minCapacity }} - Not Met!)
+        </span>
+        <span
+          *ngIf="currentSubGameCounts[subgame.id] >= subgame.maxCapacity"
+          class="error"
+        >
+          (Max Capacity Reached!)
+        </span>
+      </li>
+    </ul>
+  </div>
+
+  <button (click)="submitDataTable()">Submit Assignments</button>
+</div> -->
+
+<!--Belo Code is IMP-->
+
+<!-- <div class="container">
+  <h1>Student Subgame Assignment</h1>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Student Name</th>
+        <th>Father Name</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+        <th colspan="3">Assigned Subgames (Min 1, Max 3)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of students; let i = index">
+        <td>{{ student.name }}</td>
+        <td>{{ student.fatherName }}</td>
+        <td>{{ student.dateOfBirth }}</td>
+        <td>{{ student.gender }}</td>
+        <td>
+          <select
+            (change)="onSubGameSelectionChange(student, 0, $event)"
+            [ngModel]="student.selectedSubGameIds[0]"
+          >
+            <option value="">-- Select SubGame 1 --</option>
+            <option
+              *ngFor="let subgame of getAvailableSubGames(student, 0)"
+              [value]="subgame.id"
+              [disabled]="
+                currentSubGameCounts[subgame.id] >= getMaxCapacity(subgame) &&
+                subgame.id !== student.selectedSubGameIds[0]
+              "
+            >
+              {{ subgame.subGameName }} (Capacity:
+              {{ currentSubGameCounts[subgame.id] || 0 }}/{{
+                getMaxCapacity(subgame)
+              }})
+            </option>
+          </select>
+        </td>
+        <td>
+          <select
+            (change)="onSubGameSelectionChange(student, 1, $event)"
+            [ngModel]="student.selectedSubGameIds[1]"
+          >
+            <option value="">-- Select SubGame 2 --</option>
+            <option
+              *ngFor="let subgame of getAvailableSubGames(student, 1)"
+              [value]="subgame.id"
+              [disabled]="
+                currentSubGameCounts[subgame.id] >= getMaxCapacity(subgame) &&
+                subgame.id !== student.selectedSubGameIds[1]
+              "
+            >
+              {{ subgame.subGameName }} (Capacity:
+              {{ currentSubGameCounts[subgame.id] || 0 }}/{{
+                getMaxCapacity(subgame)
+              }})
+            </option>
+          </select>
+        </td>
+        <td>
+          <select
+            (change)="onSubGameSelectionChange(student, 2, $event)"
+            [ngModel]="student.selectedSubGameIds[2]"
+          >
+            <option value="">-- Select SubGame 3 --</option>
+            <option
+              *ngFor="let subgame of getAvailableSubGames(student, 2)"
+              [value]="subgame.id"
+              [disabled]="
+                currentSubGameCounts[subgame.id] >= getMaxCapacity(subgame) &&
+                subgame.id !== student.selectedSubGameIds[2]
+              "
+            >
+              {{ subgame.subGameName }} (Capacity:
+              {{ currentSubGameCounts[subgame.id] || 0 }}/{{
+                getMaxCapacity(subgame)
+              }})
+            </option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="summary">
+    <h3>Global Subgame Capacity Status:</h3>
+    <ul>
+      <li *ngFor="let subgame of allSubGames">
+        {{ subgame.subGameName }} (ID: {{ subgame.id }}): Current:
+        {{ currentSubGameCounts[subgame.id] || 0 }} / Max:
+        {{ getMaxCapacity(subgame) }}
+        <span
+          *ngIf="currentSubGameCounts[subgame.id] < getMinCapacity(subgame)"
+          class="warning"
+        >
+          (Min: {{ getMinCapacity(subgame) }} - Not Met!)
+        </span>
+        <span
+          *ngIf="currentSubGameCounts[subgame.id] >= getMaxCapacity(subgame)"
+          class="error"
+        >
+          (Max Capacity Reached!)
+        </span>
+      </li>
+    </ul>
+  </div>
+
+  <button [disabled]="isSubmitButtonDisabled" (click)="submitDataTable()">
+    Submit Assignments
+  </button>
+</div> -->

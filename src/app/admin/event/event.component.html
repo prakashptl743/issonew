@@ -1,0 +1,361 @@
+<p-toast
+  [style]="{ marginTop: '50px' }"
+  styleClass="custom-toast"
+  key="custom"
+  position="bottom-center"
+></p-toast>
+<div id="content1" class="content-wrapper">
+  <div class="add-new-school-dialog" *ngIf="currentEvent && display">
+    <form
+      [formGroup]="eventForm"
+      class="align-form-div"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Event Name</label>
+          <input
+            class="form-control"
+            formControlName="eventName"
+            type="text"
+            required
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Registration charges</label>
+          <input
+            class="form-control"
+            formControlName="registrationCharge"
+            type="text"
+            required
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Event Start Date</label>
+          <p-calendar
+            formControlName="eventStartDate"
+            (onSelect)="changeEndDate($event)"
+            [minDate]="minDate"
+            dateFormat="dd/mm/yy"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            [monthNavigator]="true"
+            [yearNavigator]="true"
+            [yearRange]="schoolYearRange"
+            [disabled]="isReadonly"
+          ></p-calendar>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Event End Date</label>
+          <p-calendar
+            formControlName="eventEndDate"
+            [minDate]="endMinDate"
+            dateFormat="dd/mm/yy"
+            showAnim="slideDown"
+            [style]="{ width: '100%' }"
+            [inputStyle]="{ width: '100%' }"
+            [monthNavigator]="true"
+            [yearNavigator]="true"
+            [yearRange]="schoolYearRange"
+            [disabled]="isReadonly"
+          ></p-calendar>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Location</label>
+          <input
+            class="form-control"
+            formControlName="eventLocation"
+            type="text"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Event Type</label>
+          <p-dropdown
+            [options]="options"
+            size="30"
+            [(ngModel)]="eventType"
+            formControlName="eventType"
+          >
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Terms and Conditions</label>
+          <textarea
+            [rows]="5"
+            [cols]="30"
+            class="form-control"
+            formControlName="eventNote"
+          ></textarea>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Description</label>
+          <textarea
+            [rows]="5"
+            [cols]="30"
+            class="form-control"
+            formControlName="eventDesc"
+          ></textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputEmail4">Certificate Header content</label>
+          <textarea
+            [rows]="5"
+            [cols]="30"
+            class="form-control"
+            formControlName="certificateHeaderContent"
+          >
+          </textarea>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Certificate Main content</label>
+          <textarea
+            [rows]="5"
+            [cols]="30"
+            class="form-control"
+            formControlName="certificateMainContent"
+          >
+          </textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputPassword4">Extra Tab Required</label>
+          <p-dropdown
+            [options]="yesNoOptions"
+            size="30"
+            [(ngModel)]="extraTabRequired"
+            (onChange)="onTabChange($event)"
+            formControlName="extraTabRequired"
+          >
+          </p-dropdown>
+          <label for="inputPassword4">Event Zone</label>
+          <div>
+            <p-multiSelect
+              [options]="zoneOptions"
+              (onChange)="zoneChange($event)"
+              formControlName="eventZone"
+              [(ngModel)]="eventZoneVal"
+              [panelStyle]="{ minWidth: '12em' }"
+            >
+            </p-multiSelect>
+          </div>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="inputPassword4"
+            >Extra Tab Label Values(Add comma seperated)
+          </label>
+          <textarea
+            [rows]="5"
+            [cols]="30"
+            class="form-control"
+            formControlName="extraTabValues"
+            [readonly]="!isExtraTabRequired"
+          >
+          </textarea>
+        </div>
+      </div>
+
+      <input
+        id="float-input1"
+        formControlName="eventId"
+        type="hidden"
+        pInputText
+      />
+
+      <button
+        [disabled]="!eventForm.valid"
+        class="btn btn-primary"
+        type="button"
+        (click)="onSubmit()"
+      >
+        Submit
+      </button>
+      <button
+        class="btn btn-primary-outline"
+        type="button"
+        (click)="resetform(); display = false"
+      >
+        Cancel
+      </button>
+    </form>
+  </div>
+
+  <p-dataView
+    *ngIf="currentEvent && !display"
+    #dv
+    [paginator]="true"
+    [rows]="10"
+    paginatorPosition="bottom"
+    [value]="eventInfo"
+    class="no-padding clearBoth"
+    filterBy="eventName,location"
+    [sortField]="sortField"
+    [sortOrder]="sortOrder"
+    layout="grid"
+  >
+    <p-header>
+      <div class="ui-helper-clearfix">
+        <div class="form-group col-md-4">
+          <label for="inputEmail4">Select Year</label>
+          <p-dropdown
+            [options]="yearOptions"
+            [(ngModel)]="selectedYear"
+            placeholder="Select Year"
+            (onChange)="onyeareChange($event)"
+            [style]="{ 'min-width': '140px' }"
+          ></p-dropdown>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="inputEmail4">Search Events</label>
+          <input
+            class="search-text"
+            type="search"
+            pInputText
+            placeholder="Search Events"
+            (input)="dv.filter($event.target.value)"
+          />
+        </div>
+        <div class="form-group col-md-4 align-add-button">
+          <button
+            type="button"
+            *ngIf="!display"
+            (click)="addNewEvent($event, '', 'add')"
+            pButton
+            label="Add New Event"
+          ></button>
+        </div>
+      </div>
+    </p-header>
+
+    <app-loading *ngIf="showspinner"></app-loading>
+    <!-- *ngIf="event.event_status === '1' && event.startDate > today" -->
+    <ng-template let-event pTemplate="gridItem" style="word-wrap: break-word">
+      <div style="padding: 0.5em" class="ui-g-12 ui-md-6">
+        <div class="item-box">
+          <div class="item-header1">
+            <div class="ev-name" title="{{ event.eventName }}">
+              <b>{{ event.eventName }}</b>
+            </div>
+            <div class="icons-wrap">
+              <button
+                class="glyphicon glyphicon-edit item-icons"
+                (click)="addNewEvent($event, event, 'edit')"
+              ></button>
+              <button
+                *ngIf="event.event_status === '1' && event.startDate > today"
+                href="#"
+                class="glyphicon glyphicon-trash item-icons"
+                (click)="deleteEvent($event, event)"
+              ></button>
+            </div>
+          </div>
+          <div class="item-description">
+            <label>Registration Charge:</label>
+            <span class="item-value">{{ event.price }}</span>
+          </div>
+          <div class="item-description">
+            <label>Location:</label>
+            <div class="item-parent">
+              <div class="item-value" title="{{ event.location }}">
+                {{ event.location }}
+              </div>
+            </div>
+          </div>
+          <div class="item-description">
+            <label>Type:</label>
+            <span class="item-value" *ngIf="event.eventType == '2'"
+              >Regional</span
+            >
+            <span class="item-value" *ngIf="event.eventType == '1'"
+              >National</span
+            >
+            <span
+              class="item-value"
+              *ngIf="
+                event.eventType == 'National' || event.eventType == 'Regional'
+              "
+              >{{ event.eventType }}</span
+            >
+          </div>
+          <div class="item-description">
+            <label>Start Date:</label>
+            <span class="item-value">
+              {{ event.startDate | date : "d MMMM , y" }}</span
+            >
+          </div>
+          <div class="item-description">
+            <label>End Date:</label>
+            <span class="item-value">
+              {{ event.endDate | date : "d MMMM , y" }}</span
+            >
+          </div>
+          <div class="item-description">
+            <label>Terms and Conditions:</label>
+            <div class="item-parent">
+              <div class="item-value" title="{{ event.eventNote }}">
+                {{ event.note }}
+              </div>
+            </div>
+          </div>
+          <div class="item-description">
+            <label>Event Zone:</label>
+            <div class="item-parent">
+              <div class="item-value" title="{{ event.eventNote }}">
+                {{ event.eventZone }}
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="item-description lastChild"
+            *ngIf="event.event_status === '1' && event.startDate > today"
+          >
+            <label>Status:</label>
+            <span class="item-value"
+              ><button
+                class="btn btn-danger-small"
+                style="background-color: green; color: white"
+                type="button"
+                (click)="changeEventStatus(event)"
+              >
+                Active
+              </button></span
+            >
+          </div>
+          <div
+            class="item-description lastChild"
+            *ngIf="event.event_status === '0' || event.startDate < today"
+          >
+            <label>Status:</label>
+            <span class="item-value"
+              ><button
+                class="btn btn-danger-small"
+                style="background-color: red; color: white"
+                type="button"
+                (click)="changeEventStatus(event)"
+              >
+                Inactive
+              </button></span
+            >
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
+</div>
+<p-confirmDialog
+  key="confirm-delete-event"
+  header="Delete event data"
+  acceptLabel="Yes"
+  rejectLabel="No"
+></p-confirmDialog>

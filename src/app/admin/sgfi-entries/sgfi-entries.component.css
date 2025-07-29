@@ -1,0 +1,146 @@
+.isMenuActive {
+  background: #007ad9;
+  color: white;
+}
+
+.float-right {
+  float: right;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.align-table {
+  padding: 20px;
+}
+.hide-table {
+  visibility: hidden;
+}
+.align-box {
+  border: 1px solid gray;
+  padding: 0;
+}
+.card-bg {
+  background: khaki;
+  height: 40px;
+}
+/* Style the buttons inside the tab */
+
+:host ::ng-deep .custom-toast .ui-toast-message {
+  color: #ffffff;
+  background: blue;
+  border-radius: 20px;
+  padding-top: 8px;
+  width: 120%;
+}
+:host ::ng-deep .ui-toast .ui-toast-message.ui-toast-message-error {
+  width: 400px;
+}
+table {
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+}
+.icons-wrap {
+  float: left;
+}
+:host ::ng-deep .custom-toast .ui-toast-message {
+  color: #ffffff;
+  background: blue;
+  border-radius: 20px;
+  padding-top: 8px;
+  width: 120%;
+}
+:host ::ng-deep .custom-toast .ui-toast-close-icon {
+  position: absolute;
+  font-size: 2em;
+  top: 11px;
+  text-decoration: none;
+}
+.align-message {
+  padding: 8px;
+}
+:host ::ng-deep .ui-toast .ui-toast-icon {
+  padding-top: 4px;
+}
+
+:host ::ng-deep .custom-toast .ui-toast .ui-toast-message-text-content {
+  margin-left: 2.5em;
+}
+.panel-default > .panel-heading {
+  color: white;
+  background-color: #1362a5;
+  border-color: #ddd;
+  text-align: center;
+  font-weight: bold;
+}
+.pdf-icon {
+  color: red;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+}
+:host ::ng-deep.table > thead > tr > th {
+  vertical-align: text-top !important;
+}
+/* Basic styling for the table */
+.table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.table-row {
+  display: table-row;
+}
+
+.table-cell {
+  display: table-cell;
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  vertical-align: middle;
+}
+
+/* Header styling */
+.table-header {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+.cursor-point {
+  cursor: pointer;
+  color: blue;
+}
+.align-sr {
+  text-align: center;
+  width: 5%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .table,
+  .table-row,
+  .table-cell {
+    display: block;
+  }
+
+  .table-header {
+    display: none;
+  }
+
+  .table-cell {
+    padding: 10px;
+    border: 1px solid #ddd;
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+  }
+
+  .table-cell::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    width: calc(50% - 20px);
+    padding-right: 10px;
+    text-align: left;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+}

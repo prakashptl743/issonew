@@ -1,0 +1,79 @@
+tr:nth-child(even) {background-color: #f2f2f2;}
+th {
+  background-color: #4360b3;
+  color: white;
+  border-bottom: 0!important;
+  text-align: center;
+  vertical-align: middle!important;
+}
+.table-row-color {
+	background-color: #4360b3;
+	color: white;
+}
+table{
+	margin-bottom: 10px!important;
+}
+.totalAmount{
+	color: green;
+	font-weight:bold;
+	float: right;
+}
+.alignTbl{
+	margin-top: 10px;
+}
+.align-age-row {
+	width: 60px;
+}
+.paid-color {
+	background-color: green;
+	color: white;
+} 
+.not-paid-color {
+	background-color: red;
+	color: white;	
+}
+:host ::ng-deep .ui-paginator .ui-paginator-left-content {
+    float: left;
+    padding-left: 22px;
+    padding-top: 5px;
+}
+ 
+:host ::ng-deep .ui-table-resizable .ui-table-thead>tr>th {
+  overflow: unset;
+}
+.boys-color {
+	background: blue;
+	color: white;
+	text-align: center;
+}
+.girls-color {
+	background: pink;
+	color: black;
+	text-align: center;
+}
+.total-row {
+    background: crimson !important;
+    color: white;
+}
+.text-center {
+	text-align: center;
+}
+:host ::ng-deep .custom-toast .ui-toast-message {
+    color: #ffffff;
+    background:blue;
+    border-radius: 20px;
+    padding-top: 8px;
+    width: 150%;
+}
+:host ::ng-deep .custom-toast .ui-toast-close-icon {
+    position: absolute;
+    font-size: 2em;
+    top: 11px;
+    text-decoration: none;
+}
+:host ::ng-deep .ui-toast .ui-toast-icon {
+    padding-top: 4px;
+}
+:host ::ng-deep .custom-toast  .ui-toast .ui-toast-message-text-content {
+    margin-left: 2.5em;
+}
