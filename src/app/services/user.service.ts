@@ -48,6 +48,7 @@ export enum AdminPermission {
   Sgfidownloadpayment = "Sgfidownloadpayment",
   ProfileViewStudent = "ProfileViewStudent",
   SearchStudentProfile = "SearchStudentProfile",
+  ManualPayment = "ManualPayment",
 }
 @Injectable({
   providedIn: "root",
@@ -108,6 +109,7 @@ export class UserService {
     AdminPermission.Sgfidownloadpayment,
     AdminPermission.ProfileViewStudent,
     AdminPermission.SearchStudentProfile,
+    AdminPermission.ManualPayment,
   ];
   public isAuthorizedFor(permissions: Permission): boolean {
     return this.permissions.indexOf(permissions) >= 0;

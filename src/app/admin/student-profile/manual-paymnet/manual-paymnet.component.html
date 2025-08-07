@@ -1,0 +1,95 @@
+<div class="ui-g-12">
+  <div class="ui-g-4">
+    <p-dropdown
+      [options]="yearOptions"
+      placeholder="Select Year"
+      (onChange)="onyeareChange($event)"
+      [(ngModel)]="selectedYear"
+      [style]="{ 'min-width': '140px' }"
+    ></p-dropdown>
+  </div>
+  <div class="ui-g-4">
+    <p-dropdown
+      [disabled]="!eventReadable"
+      [options]="eventOptions"
+      placeholder="Select Event"
+      [(ngModel)]="selectedEvent"
+      (onChange)="onEventChange($event)"
+      [style]="{ 'min-width': '140px' }"
+    ></p-dropdown>
+  </div>
+</div>
+<div class="ui-g-12">
+  <div class="ui-g-4">
+    <p-dropdown
+      [disabled]="!gameReadble"
+      [options]="gameOptions"
+      placeholder="Select Game"
+      [(ngModel)]="selectedGame"
+      (onChange)="loadGameChange($event)"
+      [style]="{ 'min-width': '140px' }"
+    ></p-dropdown>
+  </div>
+  <div class="ui-g-4">
+    <p-dropdown
+      [disabled]="!schoolReadble"
+      [options]="schoolOptions"
+      [(ngModel)]="selectedSchool"
+      (onChange)="loadschoolChange($event)"
+      placeholder="Select School"
+      [style]="{ 'min-width': '140px' }"
+    ></p-dropdown>
+  </div>
+</div>
+
+<p-toast
+  [style]="{ marginTop: '50px' }"
+  styleClass="toast-body custom-toast"
+  key="custom"
+  position="bottom-center"
+></p-toast>
+
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="pulsing-dots">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+</div>
+
+<div class="table-responsive" *ngIf="isDataAvailble">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Sr No.</th>
+        <th>Student Id</th>
+        <th>Student Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of reportData; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ student.sId }}</td>
+        <td>{{ student.studentName }}</td>
+        <td style="text-align: center; vertical-align: middle">
+          <div *ngIf="student.paidStatus === 'Yes'">PAID</div>
+
+          <p-button
+            *ngIf="student.paidStatus === ''"
+            label="PAY NOW"
+            (click)="
+              copyData(
+                student.sId,
+                student.gameId,
+                student.eventId,
+                student.ageRange,
+                student.gender
+              )
+            "
+          ></p-button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

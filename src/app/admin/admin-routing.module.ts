@@ -39,6 +39,7 @@ import { ChangePassComponent } from "../change-pass/change-pass.component";
 import { IfsSchoolDataComponent } from "./ifs-school-data/ifs-school-data.component";
 import { ViewStudentComponent } from "./student-profile/view-student/view-student.component";
 import { SearchStudentProfileComponent } from "./student-profile/search-student-profile/search-student-profile.component";
+import { ManualPaymentComponent } from "./student-profile/manual-paymnet/manual-paymnet.component";
 
 const routes: Routes = [
   {
@@ -456,6 +457,13 @@ const routes: Routes = [
             component: SearchStudentProfileComponent,
             canActivate: [PermissionGuard],
             data: { adminpermission: AdminPermission.SearchStudentProfile },
+          },
+          {
+            path: "manual-payment",
+            pathMatch: "full",
+            component: ManualPaymentComponent,
+            canActivate: [PermissionGuard],
+            data: { adminpermission: AdminPermission.ManualPayment },
           },
           // { path: 'game', component: GameComponent },
           // { path: 'dashboard', component: TestComponent },

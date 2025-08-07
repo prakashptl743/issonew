@@ -66,6 +66,18 @@ export class AdminStudentProfileService {
       )
       .pipe(catchError(this.handleError));
   }
+  getStudentData(eventValue, gameVal, schoolvalue) {
+    let str =
+      "adminStudentProfile/StudentProfile/getStudentData/" +
+      eventValue +
+      "/" +
+      gameVal +
+      "/" +
+      schoolvalue;
+    return this.http
+      .get(this.serverUrl + str)
+      .pipe(catchError(this.handleError));
+  }
   updateStudentDataYearWise(studentInfo) {
     return this.http
       .post<any>(

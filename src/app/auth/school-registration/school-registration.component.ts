@@ -336,7 +336,7 @@ export class SchoolRegistrationComponent implements OnInit {
 
   onEmailVerify() {
     let emailVal = this.verifyEmail.get("varifyEmail").value;
-    this.schoolService.verifyEmail(emailVal).subscribe(
+    this.schoolService.checkEmailFromDB(emailVal).subscribe(
       (data) => {
         console.log(data);
 

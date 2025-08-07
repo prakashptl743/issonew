@@ -178,7 +178,7 @@
     }}/{{ gameID }}/{{ schoolIdForCoach }}"
     >Download ID Card
   </a>
-  <a
+  <!-- <a
     *ngIf="reportValue === 0"
     class="btn btn-primary"
     [class.disabled]="!isDataAvailble ? true : null"
@@ -187,6 +187,49 @@
     }}/{{ gameID }}/{{ schoolIdForCoach }}"
     >Download Report
   </a>
+
+  <a
+    *ngIf="
+      gameType?.length && gameType[0]?.gameType === 'Both' && reportValue === 0
+    "
+    class="btn btn-primary"
+    [class.disabled]="!isDataAvailble ? true : null"
+    href="{{ baseUrl }}tcpdf/gameStaffReportForBothTypeGame/{{ eventValue }}/{{
+      gameID
+    }}/{{ schoolIdForCoach }}"
+    >Download Report Both</a
+  > -->
+  <a
+    *ngIf="reportValue === 0"
+    class="btn btn-primary"
+    [class.disabled]="!isDataAvailble ? true : null"
+    [href]="
+      gameType?.length && gameType[0]?.gameType === 'Both'
+        ? baseUrl +
+          'tcpdf/gameStaffReportForBothTypeGame/' +
+          eventValue +
+          '/' +
+          gameID +
+          '/' +
+          schoolIdForCoach
+        : baseUrl +
+          'tcpdf/advancetcpdf_example/' +
+          yearvalue +
+          '/0/' +
+          eventValue +
+          '/' +
+          gameID +
+          '/' +
+          schoolIdForCoach
+    "
+  >
+    {{
+      gameType?.length && gameType[0]?.gameType === "Both"
+        ? "Download Report"
+        : "Download Report"
+    }}
+  </a>
+
   <a
     *ngIf="reportValue === 1"
     class="btn btn-primary"

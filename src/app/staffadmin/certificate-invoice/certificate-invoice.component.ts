@@ -712,47 +712,72 @@ export class CertificateInvoiceComponent implements OnInit {
       );
   }
   getGameData(gameID, type) {
+    let reportObservable;
     if (this.gameID) {
-      this.meritService
-        .loadStaffReport(
+      if (this.gameType[0].gameType === "Team") {
+        // Call this for Team games
+        reportObservable = this.meritService.loadStaffReport(
           this.yearvalue,
           0,
           this.eventValue,
-          gameID,
+          this.gameID,
           this.schoolId
-        )
-        .subscribe(
-          (response) => {
-            if (response !== "") {
-              this.reportData = response;
-              this.reportDataLength = Object.keys(this.reportData).length;
-              if (this.reportDataLength > 0) {
-                this.noParticipateEvent = false;
-                this.school_Name = this.reportData[0].schoolName;
-                this.event_year = this.reportData[0].event_year;
-                this.evetName = this.reportData[0].eventName;
-                this.event_name = this.evetName;
-                this.schooName = this.school_Name;
-                this.eventNote = this.reportData[0].note;
-                this.eventDescription = this.reportData[0].description;
-              } else {
-                this.messageService.add({
-                  key: "custom",
-                  severity: "error",
-                  summary: "You have not participated in this game",
-                });
-                this.noParticipateEvent = true;
-                this.isDataAvailble = false;
-                this.isMeritDataAvailble = false;
-              }
-            } else {
-              console.log("Data is blannk from service");
-            }
-          },
-          (error) => {
-            //this.errorAlert =true;
-          }
         );
+      } else if (
+        this.gameType[0].gameType === "Both" ||
+        this.gameType[0].gameType === "Individual"
+      ) {
+        // Call this for Individual games
+        reportObservable = this.meritService.bothGameReport(
+          this.eventValue,
+          this.gameID,
+          this.schoolId
+        );
+      }
+      reportObservable.subscribe(
+        (response: any) => {
+          //
+          //   this.meritService
+          //     .loadStaffReport(
+          //       this.yearvalue,
+          //       0,
+          //       this.eventValue,
+          //       gameID,
+          //       this.schoolId
+          //     )
+          //     .subscribe(
+          //       (response) =>
+          //         {
+          if (response !== "") {
+            this.reportData = response;
+            this.reportDataLength = Object.keys(this.reportData).length;
+            if (this.reportDataLength > 0) {
+              this.noParticipateEvent = false;
+              this.school_Name = this.reportData[0].schoolName;
+              this.event_year = this.reportData[0].event_year;
+              this.evetName = this.reportData[0].eventName;
+              this.event_name = this.evetName;
+              this.schooName = this.school_Name;
+              this.eventNote = this.reportData[0].note;
+              this.eventDescription = this.reportData[0].description;
+            } else {
+              this.messageService.add({
+                key: "custom",
+                severity: "error",
+                summary: "You have not participated in this game",
+              });
+              this.noParticipateEvent = true;
+              this.isDataAvailble = false;
+              this.isMeritDataAvailble = false;
+            }
+          } else {
+            console.log("Data is blannk from service");
+          }
+        },
+        (error) => {
+          //this.errorAlert =true;
+        }
+      );
     } else {
       this.isDataAvailble = false;
     }

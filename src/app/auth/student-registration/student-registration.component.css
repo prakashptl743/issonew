@@ -1,6 +1,11 @@
 .select-val {
   font-size: medium;
 }
+
+.ui-autocomplete-list-item {
+  padding: 0 !important;
+}
+
 .bg-image {
   background: url(https://issoindia.com/img/sp-bg.png);
   background-size: 100%;
@@ -21,13 +26,7 @@
   background-color: red;
   color: white;
 }
-:host
-  ::ng-deep
-  .ui-autocomplete-panel
-  .ui-autocomplete-items
-  .ui-autocomplete-list-item {
-  padding: 0 !important;
-}
+
 .align-aadhar {
   padding-left: 20px;
 }
