@@ -92,7 +92,7 @@ export class ViewStudentComponent implements OnInit {
             this.messageService.add({
               key: "custom",
               severity: "error",
-              summary: "Event not found for this year",
+              summary: "Student Data not found for this year",
             });
           }
         } else {

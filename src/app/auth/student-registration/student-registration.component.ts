@@ -1,5 +1,12 @@
-import { Component, OnInit, Renderer2, ViewEncapsulation } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  Renderer2,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import { AbstractControl, FormBuilder, ValidationErrors } from "@angular/forms";
 import { Router } from "@angular/router";
 import { SchoolService } from "src/app/admin/service/school.service";
 import { AuthService } from "../auth.service";
@@ -40,6 +47,8 @@ export interface Student {
   providers: [MessageService, ConfirmationService],
 })
 export class StudentRegistrationComponent implements OnInit {
+  @ViewChild("fileInput", { static: false }) fileInput!: ElementRef;
+
   filteredPages: any[];
   schoolName: any;
   studentForm: FormGroup;
@@ -133,7 +142,7 @@ export class StudentRegistrationComponent implements OnInit {
       studentName: ["", [Validators.required, Validators.minLength(3)]],
       fatherName: ["", [Validators.required, Validators.minLength(3)]],
       admissionNo: ["", [Validators.required, Validators.minLength(1)]],
-      schoolName: ["", Validators.required],
+      schoolName: [null, [Validators.required, this.schoolValidator]],
       dob: ["", Validators.required],
       class: ["", Validators.required],
       adharNo: ["", Validators.required],
@@ -210,14 +219,16 @@ export class StudentRegistrationComponent implements OnInit {
         this.subGameCapacityKeys[sg.id] = { maxKey: "0", minKey: "0" }; // Default or handle error
       }
     });
-
-    // If students already have pre-selected subgames, initialize counts here
-    // this.students.forEach(student => {
-    //   student.selectedSubGameIds.forEach(id => {
-    //     this.currentSubGameCounts[id] = (this.currentSubGameCounts[id] || 0) + 1;
-    //   });
-    // });
   }
+
+  schoolValidator(control: AbstractControl): ValidationErrors | null {
+    const school = control.value;
+    if (!school || typeof school !== "object" || !school.id) {
+      return { invalidSchool: true };
+    }
+    return null;
+  }
+
   allowOnlyNumbers(event: KeyboardEvent) {
     const charCode = event.which ? event.which : event.keyCode;
     // Allow: 0-9 (ASCII: 48-57)
@@ -495,8 +506,6 @@ export class StudentRegistrationComponent implements OnInit {
       this.aadharNo = aadhar;
       this.passport = "";
     }
-    console.log("Im adhar--->" + this.aadharNo);
-    console.log("Im passport--->" + this.passport);
   }
   changeMenu(menuType: string) {
     if (menuType == "enroll") {
@@ -510,6 +519,7 @@ export class StudentRegistrationComponent implements OnInit {
     this.validStudentId = false;
     this.isStudentEnrollForm = !this.isStudentEnrollForm;
     this.studentForm.reset();
+    this.fileInput.nativeElement.value = "";
     this.issoEnrolledForm.reset();
     this.uploadedFile = null;
     this.imagePreview = null;
@@ -544,10 +554,8 @@ export class StudentRegistrationComponent implements OnInit {
   }
   filterPages(event) {
     this.filteredPages = this.filterCountry(event.query, this.schoolListArray);
-    console.log("this.filteredPages -->" + this.filteredPages);
   }
   onPageSelect(evt: any) {
-    console.log(evt.id);
     this.schoolId = evt.id;
   }
   filterCountry(query, countries: any[]): any[] {
@@ -758,6 +766,7 @@ export class StudentRegistrationComponent implements OnInit {
     );
   }
   onSubmit() {
+    console.log("Im school id-->" + this.schoolId);
     this.submitted = true;
     this.isLoading = true;
     const formData = new FormData();
@@ -768,7 +777,7 @@ export class StudentRegistrationComponent implements OnInit {
       (datOfbirth.getMonth() + 1) +
       "-" +
       datOfbirth.getDate();
-    if (this.studentForm.valid) {
+    if (this.studentForm.valid && this.schoolId !== "undefined") {
       Object.keys(this.studentForm.controls).forEach((key) => {
         //formData.append(key, this.studentForm.get(key)?.value);
         const control = this.studentForm.get(key);
@@ -798,13 +807,13 @@ export class StudentRegistrationComponent implements OnInit {
               detail: "Validation failed",
             });
           } else {
-            this.studentForm.reset();
             this.uploadedFile = null;
             this.imagePreview = null;
             this.fileError = "";
 
             this.imagePreview = "";
             this.studentForm.reset();
+            this.fileInput.nativeElement.value = "";
             this.messageService.add({
               key: "custom",
               severity: "success",

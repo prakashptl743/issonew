@@ -120,6 +120,18 @@ export class SchoolService {
       );
   }
 
+  checkEmailFromDB(eventValue) {
+    return this.http
+      .post<any>(`${this.serverUrl}school/checkEmailFromDB`, {
+        email: eventValue,
+      })
+      .pipe(
+        map((user) => {
+          return user;
+        }),
+        catchError(this.handleError)
+      );
+  }
   deleteSchool(id: number) {
     return this.http
       .delete(this.serverUrl + "school/deleteSchool/" + id)
