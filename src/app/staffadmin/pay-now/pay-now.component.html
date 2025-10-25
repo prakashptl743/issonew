@@ -17,12 +17,6 @@
     <div class="col-md-12">
       <div class="btn-nav">
         <span
-          [ngClass]="isFirstYear ? 'active' : ''"
-          class="grey-btn mr10"
-          (click)="onyeareChange(yearOptions[0].year, 'first')"
-          >{{ yearOptions[0].year }}</span
-        >
-        <span
           [ngClass]="!isFirstYear ? 'active' : ''"
           class="grey-btn mr10"
           (click)="onyeareChange(yearOptions[1].year, 'second')"
@@ -114,7 +108,7 @@
             [class.disabled]="!(totalAmount > 0)"
             class="btn pay-now-button"
             type="button"
-            (click)="payNow(totalAmount, '', paymentType)"
+            (click)="payNow(totalAmount, '', '', '', paymentType)"
           >
             PAY NOW
           </button>
@@ -145,7 +139,7 @@
                 <!-- {{studentList | json}} -->
                 <!-- <span *ngIf="studentList.isPaid == ''">HelloS</span> -->
 
-                <td *ngIf="studentList.isPaid == ''">
+                <td *ngIf="studentList.paidStatus == ''">
                   <input
                     class="largerCheckbox"
                     *ngIf="schoolType == 'Yes'"
@@ -153,7 +147,9 @@
                     (change)="
                       addPaymentForStudent(
                         $event,
-                        studentList.sId,
+                        studentList.studentId,
+                        studentList.ageRange,
+                        studentList.gender,
                         studentList.price * 1
                       )
                     "
@@ -166,14 +162,16 @@
                     (change)="
                       addPaymentForStudent(
                         $event,
-                        studentList.sId,
+                        studentList.studentId,
+                        studentList.ageRange,
+                        studentList.gender,
                         studentList.price * 2
                       )
                     "
                     #checkboxes
                   />
                 </td>
-                <td *ngIf="studentList.isPaid == 'Yes'"></td>
+                <td *ngIf="studentList.paidStatus == 'Yes'"></td>
                 <td>{{ i + 1 }}</td>
                 <!-- <td class="align-event">{{studentList.eventName}}</td> -->
                 <td>{{ studentList.studentName }}</td>
@@ -184,21 +182,21 @@
                 <td *ngIf="schoolType == 'No'">
                   {{ studentList.price * 2 }} Rs.
                 </td>
-                <td *ngIf="studentList.isPaid == 'Yes'">
+                <td *ngIf="studentList.paidStatus == 'Yes'">
                   <span class="item-value paid">PAID</span>
                 </td>
-                <td *ngIf="studentList.isPaid == ''">
+                <td *ngIf="studentList.paidStatus == ''">
                   <span class="item-value not-paid">NOT PAID</span>
                 </td>
 
                 <!-- <td class="paid-column" *ngIf="studentList.isPaid == 'Yes'">Paid</td>
                 <td class="not-paid-column" *ngIf="studentList.isPaid == ''">Not Paid</td> -->
 
-                <td class="action" *ngIf="studentList.isPaid == 'Yes'">
+                <td class="action" *ngIf="studentList.paidStatus == 'Yes'">
                   <span *ngIf="schoolType == 'Yes'">N/A</span>
                   <span *ngIf="schoolType == 'No'">N/A</span>
                 </td>
-                <td class="action" *ngIf="studentList.isPaid == ''">
+                <td class="action" *ngIf="studentList.paidStatus == ''">
                   <button
                     *ngIf="schoolType == 'Yes'"
                     class="btn pay-now-button"
@@ -206,7 +204,9 @@
                     (click)="
                       payNow(
                         studentList.price * 1,
-                        studentList.sId,
+                        studentList.studentId,
+                        studentList.ageRange,
+                        studentList.gender,
                         'individual'
                       )
                     "
@@ -220,7 +220,9 @@
                     (click)="
                       payNow(
                         studentList.price * 2,
-                        studentList.sId,
+                        studentList.studentId,
+                        studentList.ageRange,
+                        studentList.gender,
                         'individual'
                       )
                     "
@@ -245,6 +247,14 @@
               >
                 PAY NOW
               </button>
+              <!-- <button
+                [class.disabled]="!(totalTeamAmount > 0)"
+                class="pay-button btn pay-now-button"
+                type="button"
+                (click)="saveTeamPaymentData()"
+              >
+                PAY NOW
+              </button> -->
             </p>
           </div>
           <!-- <div class="ui-g-12" class="pad-left">
@@ -260,7 +270,19 @@
       </div>
     </div>
   </div>
-
+  <div
+    *ngIf="isPaymentLoader"
+    class="loader-overlay"
+    role="status"
+    aria-live="polite"
+    aria-label="Processing payment"
+  >
+    <div class="loader-card">
+      <div class="spinner" aria-hidden="true"></div>
+      <div class="loader-title">Kindly wait…</div>
+      <div class="loader-sub">We are accepting your payment.</div>
+    </div>
+  </div>
   <p-toast
     [style]="{ marginTop: '50px' }"
     styleClass="custom-toast"

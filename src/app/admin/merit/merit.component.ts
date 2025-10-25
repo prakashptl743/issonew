@@ -414,59 +414,49 @@ export class MeritComponent implements OnInit {
       (response) => {
         let ageList;
 
-        if (
-          response[0].ageRange !== "null" &&
-          response[0].girlsAgeRange == "null"
-        ) {
-          this.genderOptions = this.issoUtilService.setMapGender("boy");
-        }
-        if (
-          response[0].ageRange == "null" &&
-          response[0].girlsAgeRange !== "null"
-        ) {
-          this.genderOptions = this.issoUtilService.setMapGender("girl");
-        }
-        if (
-          response[0].ageRange !== "null" &&
-          response[0].girlsAgeRange !== "null"
-        ) {
-          this.genderOptions = this.issoUtilService.setMapGender("both");
-        }
+        const responseData = response[0];
 
         if (
-          response[0].ageRange !== "null" ||
-          response[0].girlsAgeRange !== "null"
+          responseData.ageRange !== "null" ||
+          responseData.girlsAgeRange !== "null"
         ) {
-          if (response[0].ageRange == "null") {
-            ageList = response[0].girlsAgeRange;
-          } else if (response[0].girlsAgeRange !== "null") {
-            ageList = response[0].ageRange;
-          } else {
-            ageList = response[0].ageRange + " " + response[0].girlsAgeRange;
+          // set genderOptions
+          if (
+            responseData.ageRange !== "null" &&
+            responseData.girlsAgeRange === "null"
+          ) {
+            this.genderOptions = this.issoUtilService.setMapGender("boy");
+          } else if (
+            responseData.ageRange === "null" &&
+            responseData.girlsAgeRange !== "null"
+          ) {
+            this.genderOptions = this.issoUtilService.setMapGender("girl");
+          } else if (
+            responseData.ageRange !== "null" &&
+            responseData.girlsAgeRange !== "null"
+          ) {
+            this.genderOptions = this.issoUtilService.setMapGender("both");
           }
-          //  const ageList = response[0].ageRange + " " + response[0].girlsAgeRange;
-          this.ageMeritArray = ageList.split(" ");
-          const x = Array.from(new Set(ageList.split(" "))).toString();
 
-          var myarray = x.split(",");
-          let ageArrayLength = myarray.length;
+          // collect ages into one string
+          let combined = "";
+          if (responseData.ageRange !== "null")
+            combined += responseData.ageRange + " ";
+          if (responseData.girlsAgeRange !== "null")
+            combined += responseData.girlsAgeRange;
 
-          this.ageOptions = [];
-          this.ageOptions.push({
-            label: "Please Select",
-            value: "",
-          });
+          // split by spaces & remove duplicates
+          const myarray = Array.from(
+            new Set(combined.trim().split(/\s+/)) // split on any whitespace
+          );
 
-          for (var i = 0; i < ageArrayLength; i++) {
-            if (myarray[i] !== "" && myarray[i] !== "null") {
-              this.ageOptions.push({
-                label: myarray[i],
-                value: myarray[i],
-              });
+          // build dropdown options
+          this.ageOptions = [{ label: "Please Select", value: "" }];
+          myarray.forEach((age) => {
+            if (age && age !== "null") {
+              this.ageOptions.push({ label: age, value: age });
             }
-          }
-        } else {
-          console.log("im else");
+          });
         }
       },
       (error) => {

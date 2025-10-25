@@ -513,9 +513,7 @@ export class StudentRegistrationComponent implements OnInit {
     } else {
       this.isStudentEnrollForm = true;
     }
-    // if(menuType =='issoId') {
-
-    // }
+ 
     this.validStudentId = false;
     this.isStudentEnrollForm = !this.isStudentEnrollForm;
     this.studentForm.reset();

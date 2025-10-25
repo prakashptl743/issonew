@@ -218,57 +218,148 @@ export class ManageTeamReport implements OnInit {
             this.selectedGender = "";
             this.genderReadble = false;
             let ageList;
+            // New code
+            // const responseData = response[0];
+
+            // if (
+            //   responseData.ageRange !== "null" ||
+            //   responseData.girlsAgeRange !== "null"
+            // ) {
+            //   // set genderOptions
+            //   if (
+            //     responseData.ageRange !== "null" &&
+            //     responseData.girlsAgeRange === "null"
+            //   ) {
+            //     this.genderOptions = this.issoUtilService.setMapGender("boy");
+            //   } else if (
+            //     responseData.ageRange === "null" &&
+            //     responseData.girlsAgeRange !== "null"
+            //   ) {
+            //     this.genderOptions = this.issoUtilService.setMapGender("girl");
+            //   } else if (
+            //     responseData.ageRange !== "null" &&
+            //     responseData.girlsAgeRange !== "null"
+            //   ) {
+            //     this.genderOptions = this.issoUtilService.setMapGender("both");
+            //   }
+
+            //   // collect ages properly
+            //   let ageList = [];
+            //   if (responseData.ageRange !== "null")
+            //     ageList.push(responseData.ageRange);
+            //   if (responseData.girlsAgeRange !== "null")
+            //     ageList.push(responseData.girlsAgeRange);
+
+            //   // remove duplicates
+            //   const myarray = Array.from(new Set(ageList));
+
+            //   // build ageOptions
+            //   this.ageOptions = [{ label: "Please Select", value: "" }];
+            //   myarray.forEach((age) => {
+            //     if (age && age !== "null") {
+            //       this.ageOptions.push({ label: age, value: age });
+            //     }
+            //   });
+            // }
+
+            const responseData = response[0];
+
             if (
-              response[0].ageRange !== "null" ||
-              response[0].girlsAgeRange !== "null"
+              responseData.ageRange !== "null" ||
+              responseData.girlsAgeRange !== "null"
             ) {
+              // set genderOptions
               if (
-                response[0].ageRange !== "null" &&
-                response[0].girlsAgeRange == "null"
+                responseData.ageRange !== "null" &&
+                responseData.girlsAgeRange === "null"
               ) {
                 this.genderOptions = this.issoUtilService.setMapGender("boy");
-              }
-              if (
-                response[0].ageRange == "null" &&
-                response[0].girlsAgeRange !== "null"
+              } else if (
+                responseData.ageRange === "null" &&
+                responseData.girlsAgeRange !== "null"
               ) {
                 this.genderOptions = this.issoUtilService.setMapGender("girl");
-              }
-              if (
-                response[0].ageRange !== "null" &&
-                response[0].girlsAgeRange !== "null"
+              } else if (
+                responseData.ageRange !== "null" &&
+                responseData.girlsAgeRange !== "null"
               ) {
                 this.genderOptions = this.issoUtilService.setMapGender("both");
               }
 
-              if (response[0].ageRange == "null") {
-                ageList = response[0].girlsAgeRange;
-              } else if (response[0].girlsAgeRange !== "null") {
-                ageList = response[0].ageRange;
-              } else {
-                ageList =
-                  response[0].ageRange + " " + response[0].girlsAgeRange;
-              }
-              const x = Array.from(new Set(ageList.split(" "))).toString();
+              // collect ages into one string
+              let combined = "";
+              if (responseData.ageRange !== "null")
+                combined += responseData.ageRange + " ";
+              if (responseData.girlsAgeRange !== "null")
+                combined += responseData.girlsAgeRange;
 
-              var myarray = x.split(",");
-              let ageArrayLength = myarray.length;
+              // split by spaces & remove duplicates
+              const myarray = Array.from(
+                new Set(combined.trim().split(/\s+/)) // split on any whitespace
+              );
 
-              this.ageOptions = [];
-              this.ageOptions.push({
-                label: "Please Select",
-                value: "",
-              });
-
-              for (var i = 0; i < ageArrayLength; i++) {
-                if (myarray[i] !== "" && myarray[i] !== "null") {
-                  this.ageOptions.push({
-                    label: myarray[i],
-                    value: myarray[i],
-                  });
+              // build dropdown options
+              this.ageOptions = [{ label: "Please Select", value: "" }];
+              myarray.forEach((age) => {
+                if (age && age !== "null") {
+                  this.ageOptions.push({ label: age, value: age });
                 }
-              }
+              });
             }
+
+            // old code
+            // if (
+            //   response[0].ageRange !== "null" ||
+            //   response[0].girlsAgeRange !== "null"
+            // ) {
+            //   if (
+            //     response[0].ageRange !== "null" &&
+            //     response[0].girlsAgeRange == "null"
+            //   ) {
+            //     this.genderOptions = this.issoUtilService.setMapGender("boy");
+            //   }
+            //   if (
+            //     response[0].ageRange == "null" &&
+            //     response[0].girlsAgeRange !== "null"
+            //   ) {
+            //     this.genderOptions = this.issoUtilService.setMapGender("girl");
+            //   }
+            //   if (
+            //     response[0].ageRange !== "null" &&
+            //     response[0].girlsAgeRange !== "null"
+            //   ) {
+            //     this.genderOptions = this.issoUtilService.setMapGender("both");
+            //   }
+
+            //   if (response[0].ageRange == "null") {
+            //     ageList = response[0].girlsAgeRange;
+            //   } else if (response[0].girlsAgeRange !== "null") {
+            //     ageList = response[0].ageRange;
+            //   } else {
+            //     ageList =
+            //       response[0].ageRange + " " + response[0].girlsAgeRange;
+            //   }
+            //   const x = Array.from(new Set(ageList.split(" "))).toString();
+
+            //   var myarray = x.split(",");
+            //   let ageArrayLength = myarray.length;
+
+            //   this.ageOptions = [];
+            //   this.ageOptions.push({
+            //     label: "Please Select",
+            //     value: "",
+            //   });
+
+            //   for (var i = 0; i < ageArrayLength; i++) {
+            //     if (myarray[i] !== "" && myarray[i] !== "null") {
+            //       this.ageOptions.push({
+            //         label: myarray[i],
+            //         value: myarray[i],
+            //       });
+            //     }
+            //   }
+            // }
+            // End old code
           },
           (error) => {
             //this.errorAlert =true;

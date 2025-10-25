@@ -280,6 +280,13 @@ export class ReportMeritService {
       .get(this.serverUrl + str)
       .pipe(catchError(this.handleError));
   }
+
+  loadSchoolForPayment(evenId, gameId) {
+    let str = "student/loadSchoolForPayment/" + evenId + "/" + gameId;
+    return this.http
+      .get(this.serverUrl + str)
+      .pipe(catchError(this.handleError));
+  }
   loadSchoolForVolunteer(evenId) {
     let str = "merit/getSchoolListForVolunteer/" + evenId;
     return this.http

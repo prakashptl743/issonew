@@ -256,7 +256,7 @@ export class ManageEvent implements OnInit {
     );
   }
 
-  changeEventStatus(eventId, isStatus) {
+  changeEventStatus(eventId, isStatus, schoolId) {
     const formData = new FormData();
     if (isStatus == "0") {
       formData.append("status", "1");
@@ -264,26 +264,28 @@ export class ManageEvent implements OnInit {
       formData.append("status", "0");
     }
 
-    this.eventService.changeActiveEventStatus(eventId, formData).subscribe(
-      (res) => {
-        if (res.status === "success") {
-          this.messageService.add({
-            key: "custom",
-            severity: "success",
-            summary: "Event Data Updated Successfully",
-          });
-        } else {
-          this.messageService.add({
-            key: "custom",
-            severity: "success",
-            summary: "Event Data Updated Successfully",
-          });
-        }
-        this.display = false;
-        this.getEventData();
-      },
-      (error) => (this.error = error)
-    );
+    this.eventService
+      .changeActiveEventStatus(eventId, formData, schoolId)
+      .subscribe(
+        (res) => {
+          if (res.status === "success") {
+            this.messageService.add({
+              key: "custom",
+              severity: "success",
+              summary: "Event Data Updated Successfully",
+            });
+          } else {
+            this.messageService.add({
+              key: "custom",
+              severity: "success",
+              summary: "Event Data Updated Successfully",
+            });
+          }
+          this.display = false;
+          this.getEventData();
+        },
+        (error) => (this.error = error)
+      );
   }
   deleteActiveEvent(eventId, schoolId) {
     const formData = new FormData();

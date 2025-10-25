@@ -105,7 +105,9 @@
             ><button
               class="btn btn-danger-small pendig-state"
               type="button"
-              (click)="changeEventStatus(event.eventId, event.status)"
+              (click)="
+                changeEventStatus(event.eventId, event.status, event.schoolId)
+              "
             >
               Inactive
             </button></span
@@ -116,7 +118,9 @@
             ><button
               class="btn btn-danger-small active-state"
               type="button"
-              (click)="changeEventStatus(event.eventId, event.schoolId)"
+              (click)="
+                changeEventStatus(event.eventId, event.status, event.schoolId)
+              "
             >
               Active
             </button></span
@@ -125,7 +129,7 @@
         <td>
           <span class="item-value"
             ><button
-              class="btn btn-danger"
+              class="btn btn-primary"
               type="button"
               (click)="deleteEventStatus(event.eventId, event.schoolId)"
             >

@@ -162,7 +162,6 @@
               (blur)="studentForm.controls.contactNo.markAsTouched()"
               placeholder="Enter contact number"
               [(ngModel)]="mobileNumber"
-              (blur)="validateMobile()"
               [ngClass]="{
                 'is-valid':
                   isValidMobile && !studentForm.controls.contactNo.invalid,
@@ -366,6 +365,7 @@
                   <i class="bi bi-send-fill"></i> Submit
                 </button>
               </div>
+              <div class="login-otp-div">Login With Email OTP</div>
             </div>
           </div>
         </form>

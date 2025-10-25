@@ -47,6 +47,7 @@ export class IssoUtilService {
   yesNoOptions: { label: string; value: string }[];
   standardClass: { label: string; value: string }[];
   tShirtSize: { label: string; value: string }[];
+  paidStatusOptions: { label: string; value: string }[];
   // constructor(private http: HttpClient) { }
 
   setYear() {
@@ -280,6 +281,14 @@ export class IssoUtilService {
     return this.ageOptions;
   }
 
+  setPaidStatus() {
+    this.paidStatusOptions = [
+      { label: "Select Status", value: "" },
+      { label: "Paid", value: "Paid" },
+      { label: "UnPaid", value: "UnPaid" },
+    ];
+    return this.paidStatusOptions;
+  }
   setFeeType() {
     this.feeType = [
       { label: "Select Type", value: "" },

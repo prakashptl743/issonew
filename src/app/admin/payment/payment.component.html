@@ -30,6 +30,16 @@
       [style]="{ 'min-width': '140px' }"
     ></p-dropdown>
   </div>
+  <div class="ui-g-4">
+    <p-dropdown
+      [disabled]="!gameReadble"
+      [options]="padiStatusOptions"
+      placeholder="Select Paid Status"
+      [(ngModel)]="selectedPaidStatus"
+      (onChange)="checkPaidStatus($event)"
+      [style]="{ 'min-width': '140px' }"
+    ></p-dropdown>
+  </div>
 </div>
 
 <p-toast
@@ -59,7 +69,13 @@
 
           <td>17 Girls</td>
           <td>19 Girls</td>
-          <td>Paid</td>
+          <td
+            [ngClass]="
+              paymentStatusValue == 'Paid' ? 'paid-color' : 'not-paid-color'
+            "
+          >
+            {{ paymentStatusValue }}
+          </td>
         </tr>
         <tr *ngFor="let student of paymentData; let i = index">
           <td>{{ i + 1 }}</td>
@@ -129,7 +145,9 @@
           <td
             class="text-center"
             [ngClass]="
-              student.paidStudent > 0 ? 'paid-color' : 'not-paid-color'
+              student.paidStudent > 0 && paymentStatusValue == 'Paid'
+                ? 'paid-color'
+                : 'not-paid-color'
             "
           >
             {{ student.paidStudent }}

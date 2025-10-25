@@ -2570,4 +2570,7 @@ export class StudentComponent implements OnInit {
   private _dropDatabase() {
     console.log("Database dropped");
   }
+  enrollNewStudent() {
+    this.router.navigateByUrl("/admin/event-dashboard");
+  }
 }

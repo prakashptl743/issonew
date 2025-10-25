@@ -86,6 +86,7 @@ export class ReportComponent implements OnInit {
   isFirstYear: boolean;
   serverUrl: string;
   reportMessage: string;
+  isExtraTab: any;
   constructor(
     private issoUtilService: IssoUtilService,
     private studentService: StudentService,
@@ -317,9 +318,13 @@ export class ReportComponent implements OnInit {
             console.log("Im resp--->" + this.gameList);
             this.gameOptions = [];
             this.schoolReadble = false;
+            if (this.gameList.length === 1) {
+              this.isExtraTab = this.gameList[0]["extraTabRequired"];
+            }
             if (this.gameList.length > 0) {
               console.log("if  Im resp--->" + JSON.stringify(this.gameList));
               this.getGameData(this.gameList);
+              console.log(this.gameList[0]["extraTabRequired"]);
             } else {
               this.isDataAvailble = false;
               this.gameReadble = false;

@@ -61,53 +61,58 @@ export class ViewStudentComponent implements OnInit {
     return this.editStudentForm.controls;
   }
   onyeareChange(event) {
-    // this.studentAttendanceArray = [];
-    // this.studentAbsentArray = [];
-    this.isLoading = true;
     this.yearvalue = event.value;
-    this.setPhotoPath();
-    this.adminStudentProfileService.getSchoolData(event.value).subscribe(
-      (response) => {
-        this.isLoading = false;
-        if (response !== "") {
-          this.schoolData = response;
+    if (this.yearvalue) {
+      this.isLoading = true;
+      this.setPhotoPath();
+      this.adminStudentProfileService.getSchoolData(event.value).subscribe(
+        (response) => {
+          this.isLoading = false;
+          if (response !== "") {
+            this.schoolData = response;
 
-          if (this.schoolData.length > 0) {
-            this.schoolOptions = [];
-            this.schoolReadable = true;
-            this.isDataAvailble = false;
-            this.schoolOptions.push({
-              label: "Please Select",
-              value: "",
-            });
-            this.schoolData.forEach((element) => {
+            if (this.schoolData.length > 0) {
+              this.schoolOptions = [];
+              this.schoolReadable = true;
+              this.isDataAvailble = false;
               this.schoolOptions.push({
-                label: element.schoolName,
-                value: element.schoolId,
+                label: "Please Select",
+                value: "",
               });
-            });
+              this.schoolData.forEach((element) => {
+                this.schoolOptions.push({
+                  label: element.schoolName,
+                  value: element.schoolId,
+                });
+              });
+            } else {
+              this.isDataAvailble = false;
+              this.schoolReadable = false;
+              this.messageService.add({
+                key: "custom",
+                severity: "error",
+                summary: "Student Data not found for this year",
+              });
+            }
           } else {
-            this.isDataAvailble = false;
-            this.schoolReadable = false;
-            this.messageService.add({
-              key: "custom",
-              severity: "error",
-              summary: "Student Data not found for this year",
-            });
+            console.log("Data is blannk from service");
           }
-        } else {
-          console.log("Data is blannk from service");
+        },
+        (error) => {
+          //this.errorAlert =true;
         }
-      },
-      (error) => {
-        //this.errorAlert =true;
-      }
-    );
+      );
+    } else {
+      this.schoolReadable = false;
+      this.schoolOptions = [];
+    }
   }
   onSchoolChange(event) {
     this.schoolId = event.value;
     this.schoolName = event.originalEvent.currentTarget.ariaLabel;
-    this.getStudentData();
+    if (this.schoolId) {
+      this.getStudentData();
+    }
   }
   getStudentData() {
     this.isLoading = true;

@@ -256,3 +256,11 @@ body.no-scroll {
   overflow: hidden;
   height: 100%; /* Important for some browsers/scenarios */
 }
+.login-otp-div {
+  padding: 10px 10px;
+  color: blue;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: -39px;
+}
