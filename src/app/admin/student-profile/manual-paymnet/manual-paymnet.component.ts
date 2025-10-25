@@ -73,7 +73,7 @@ export class ManualPaymentComponent implements OnInit {
 
   ngOnInit() {
     this.isDataAvailble = false;
-    this.yearOptions = this.issoUtilService.setYear();
+    this.yearOptions = this.issoUtilService.studentProfileYear();
   }
   onyeareChange(event) {
     this.studentAttendanceArray = [];
@@ -253,7 +253,7 @@ export class ManualPaymentComponent implements OnInit {
       }
     );
 
-    this.meritService.loadSchoolByGameReport(this.eventValue, gameId).subscribe(
+    this.meritService.loadSchoolForPayment(this.eventValue, gameId).subscribe(
       (response) => {
         if (response !== "") {
           this.schoolList = response;

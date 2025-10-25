@@ -208,6 +208,13 @@
       pButton
       label="Add New Student"
     ></button>
+    <button
+      *ngIf="!display"
+      type="button"
+      (click)="enrollNewStudent()"
+      pButton
+      label="Enroll New Student"
+    ></button>
   </div>
 </div>
 <div class="align-note" *ngIf="!display && !displaySearch">

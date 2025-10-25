@@ -231,6 +231,17 @@
   </a>
 
   <a
+    *ngIf="isExtraTab == 'Yes'"
+    class="mx-5 btn btn-primary"
+    [class.disabled]="
+      isExtraTab == 'Yes' && schoolList.length === 0 ? true : null
+    "
+    [href]="baseUrl + 'tcpdf/downloadExtraReport/' + eventValue"
+  >
+    Weapon carrying letter consolidated
+  </a>
+
+  <a
     *ngIf="reportValue === 1"
     class="btn btn-primary"
     [class.disabled]="!isDataAvailble ? true : null"

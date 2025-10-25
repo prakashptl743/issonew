@@ -115,6 +115,9 @@ export class PayNowComponent implements OnInit {
   paymentTypeInfo: any;
   showAlredayPaidMessage: boolean;
   isFirstYear: boolean;
+  isPaymentLoader: boolean;
+  ageRange: any;
+  gender: any;
   //options;
   // options: {
   //   key: string; // Enter the Key ID generated from the Dashboard
@@ -175,12 +178,13 @@ export class PayNowComponent implements OnInit {
   //   this.totalAmount = this.affilateAmounnt;
   // }
 
-  payNow(amt, studentId, paymentType) {
+  payNow(amt, studentId, ageRange, gender, paymentType) {
     this.totalAmount = amt;
     this.studentId = studentId;
+    this.ageRange = ageRange;
+    this.gender = gender;
     this.paymentTypeInfo = paymentType;
-    // this.paymentCapture.bind(this);
-    // this.paymentCapture1();
+    console.log("paymentTy--->" + this.paymentTypeInfo);
     let options = {
       key: "rzp_live_08wdE0QgVsFNVd", // Enter the Key ID generated from the Dashboard
       amount: amt * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -189,7 +193,7 @@ export class PayNowComponent implements OnInit {
       name: this.eventName,
       description: this.gameName,
       image: "https://issoindia.com/assets/img/logo_retina.png",
-      //'handler': this.paymentCapture.bind(this),
+
       handler: (response) => {
         this.paymentCapture(response);
       },
@@ -229,38 +233,7 @@ export class PayNowComponent implements OnInit {
     }
     console.log("Imfun");
   }
-  orderanything() {
-    console.log("Im after payment method");
-    this.showPaidSuccess = true;
-    this.showPayemntScreen = false;
-  }
-  checkPaymentStatus() {
-    if (this.generatedpaymentId !== "") {
-      this.showPaidSuccess = true;
-      this.showPayemntScreen = false;
-    }
-  }
-  paymentCapture1() {
-    //  this.loadingProgress = true;
-    // console.log("response id "+JSON.stringify(response));
-    let paymentId = "hello";
-    //   console.log("payment id "+paymentId);
-    //   //TODO
-    this.generatedpaymentId = "dffff@sdf$%";
-    // this.generatedpaymentId = paymentId;
-    if (paymentId !== "") {
-      if (
-        this.paymentTypeInfo == "individual" ||
-        this.paymentTypeInfo == "affilation" ||
-        this.paymentTypeInfo == "kit" ||
-        this.paymentTypeInfo == "misc"
-      ) {
-        this.savePaymentData();
-      } else {
-        this.saveTeamPaymentData();
-      }
-    }
-  }
+
   // public ngDoCheck(): void {
   //   if(this.generatedpaymentId !== undefined) {
   //     console.log('Im if in do check')
@@ -274,7 +247,7 @@ export class PayNowComponent implements OnInit {
   //   console.log('AppComponent: Change detection count = ' );
   // }
   paymentCapture(response) {
-    this.showPaidSuccess = true;
+    // this.showPaidSuccess = true;
     this.showPayemntScreen = false;
     //  this.loadingProgress = true;
     var object1 = {};
@@ -315,13 +288,14 @@ export class PayNowComponent implements OnInit {
       ) {
         this.savePaymentData();
       } else {
-        this.showPaidSuccess = true;
+        // this.showPaidSuccess = true;
         this.showPayemntScreen = false;
         this.saveTeamPaymentData();
       }
     }
   }
   savePaymentData() {
+    this.isPaymentLoader = true;
     const formData = new FormData();
     if (
       this.paymentTypeInfo == "affilation" ||
@@ -343,9 +317,12 @@ export class PayNowComponent implements OnInit {
       formData.append("paidAmount", paidAmount);
       formData.append("gameId", gameId);
       formData.append("eventId", this.eventValue);
+      formData.append("ageRange", this.ageRange);
+      formData.append("gender", this.gender);
     }
     this.payemntService.savePaymentData(formData).subscribe(
       (res) => {
+        this.isPaymentLoader = false;
         if (res.status === "error") {
           this.messageService.add({
             severity: "error",
@@ -353,7 +330,16 @@ export class PayNowComponent implements OnInit {
             detail: "Validation failed",
           });
         } else {
-          this.setPaymentForGame();
+          this.isPaymentLoader = false;
+          this.showPaidSuccess = true;
+          if (
+            this.paymentTypeInfo !== "individual" ||
+            this.paymentTypeInfo !== "affilation" ||
+            this.paymentTypeInfo !== "kit" ||
+            this.paymentTypeInfo !== "misc"
+          ) {
+            this.setPaymentForGame();
+          }
           // this.messageService.add({key: 'custom', severity:'success', summary: 'Volunteer Data Added Successfully'});
 
           // this.loadCoachData();
@@ -364,7 +350,9 @@ export class PayNowComponent implements OnInit {
   }
 
   saveTeamPaymentData() {
-    let gameId = this.gameID.toString();
+    this.isPaymentLoader = true;
+    //  let gameId = this.gameID.toString();
+    let gameId = this.gameID ? this.gameID.toString() : "";
     let paidAmount = this.totalAmount.toString();
     let mappedData;
 
@@ -375,6 +363,7 @@ export class PayNowComponent implements OnInit {
     formData.append("mappedData", JSON.stringify(this.mapStudentPaymentData));
     this.payemntService.saveTeamPaymentData(formData).subscribe(
       (res) => {
+        this.isPaymentLoader = false;
         if (res.status === "error") {
           this.messageService.add({
             severity: "error",
@@ -382,8 +371,17 @@ export class PayNowComponent implements OnInit {
             detail: "Validation failed",
           });
         } else {
+          this.isPaymentLoader = false;
+          this.showPaidSuccess = true;
           // this.messageService.add({key: 'custom', severity:'success', summary: 'Volunteer Data Added Successfully'});
-          this.setPaymentForGame();
+          if (
+            this.paymentTypeInfo !== "individual" ||
+            this.paymentTypeInfo !== "affilation" ||
+            this.paymentTypeInfo !== "kit" ||
+            this.paymentTypeInfo !== "misc"
+          ) {
+            this.setPaymentForGame();
+          }
           this.totalTeamAmount = 0;
           // this.loadCoachData();
         }
@@ -439,8 +437,8 @@ export class PayNowComponent implements OnInit {
     }
   }
   loadEvents() {
-    this.studentService
-      .loadEventByYear(this.yearvalue, this.schoolId)
+    this.payemntService
+      .loadEventByYearForPayment(this.yearvalue, this.schoolId)
       .subscribe(
         //this.meritService.loadEventByYear(this.yearvalue).subscribe(
         (response) => {
@@ -667,12 +665,17 @@ export class PayNowComponent implements OnInit {
       this.isDataAvailble = false;
     }
   }
-  addPaymentForStudent(e, studentId, amount) {
+  addPaymentForStudent(e, studentId, ageRange, gender, amount) {
     if (e.target.checked) {
       this.mapStudentPaymentData.push({
         studentId: studentId,
+        ageRange: ageRange,
+        gender: gender,
         amount: amount,
       });
+      console.log(
+        "If mapped data--->" + JSON.stringify(this.mapStudentPaymentData)
+      );
     } else {
       let removeIndex = this.mapStudentPaymentData.findIndex(
         (itm) => itm.studentId === studentId
@@ -683,6 +686,7 @@ export class PayNowComponent implements OnInit {
       (a, c) => (Object.keys(c).forEach((k) => (a[k] = (a[k] || 0) + c[k])), a),
       {}
     );
+    console.log("mapped data--->" + JSON.stringify(this.mapStudentPaymentData));
     this.totalTeamAmount = result["amount"];
     if (this.totalTeamAmount === undefined) {
       this.totalTeamAmount = 0;
@@ -693,14 +697,8 @@ export class PayNowComponent implements OnInit {
     this.mapStudentPaymentData = [];
     this.reportData = [];
     this.reportDataLength = 0;
-    this.meritService
-      .loadStaffReport(
-        this.yearvalue,
-        0,
-        this.eventValue,
-        this.gameID,
-        this.schoolId
-      )
+    this.payemntService
+      .getStudentForPayment(this.eventValue, this.gameID, this.schoolId)
       .subscribe(
         (response) => {
           if (response !== "") {

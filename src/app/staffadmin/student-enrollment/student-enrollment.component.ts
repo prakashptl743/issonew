@@ -740,6 +740,7 @@ export class StudentEnrollmentComponent implements OnInit {
       "min",
       "max",
       gameType,
+      gameName
     ];
     console.log("Subgamr Im data-->" + this.studentEnrollData);
     // const gameID = gameId.replace(/'/g, "")

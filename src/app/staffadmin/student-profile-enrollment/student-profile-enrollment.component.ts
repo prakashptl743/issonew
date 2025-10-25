@@ -347,11 +347,21 @@ export class StudentProfileEnrollmentComponent implements OnInit, OnChanges {
       this.selectedSubgame = null;
       return;
     }
+    const gameName = this.studentEnrollData[7].trim().toUpperCase();
+    console.log("Im game nmae-->" + this.studentEnrollData[7]);
 
-    if (this.selectedSubgamesTable.length >= 3) {
-      this.errorMessage = "You can add a maximum of 3 subgames";
-      this.selectedSubgame = null;
-      return;
+    if (gameName.includes("SWIMMING") || gameName.includes("ATHLETICS")) {
+      if (this.selectedSubgamesTable.length >= 3) {
+        this.errorMessage = "You can add a maximum of 3 subgames";
+        this.selectedSubgame = null;
+        return;
+      }
+    } else if (gameName.includes("GYMNASTIC")) {
+      if (this.selectedSubgamesTable.length >= 4) {
+        this.errorMessage = "You can add a maximum of 4 subgames";
+        this.selectedSubgame = null;
+        return;
+      }
     }
 
     this.checkSubGameCapacity.push(this.selectedSubgame.id);

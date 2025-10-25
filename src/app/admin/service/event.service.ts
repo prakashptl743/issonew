@@ -66,8 +66,8 @@ export class EventService {
       .post<any>(this.serverUrl + str, eventData)
       .pipe(catchError(this.handleError));
   }
-  changeActiveEventStatus(id, eventData) {
-    let str = "Makeeventactive/changeActiveEventStatus/" + id;
+  changeActiveEventStatus(id, eventData, schoolId) {
+    let str = "Makeeventactive/changeActiveEventStatus/" + id + "/" + schoolId;
     return this.http
       .post<any>(this.serverUrl + str, eventData)
       .pipe(catchError(this.handleError));
