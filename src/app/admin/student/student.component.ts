@@ -262,6 +262,7 @@ export class StudentComponent implements OnInit {
   today: string;
   subGameCapacity: any;
   isAddNewStudent: boolean;
+  studentEnrollData = [];
   setPhotoYear: string;
   studentPhoto: any;
   isValidFile: boolean = true;
@@ -299,6 +300,10 @@ export class StudentComponent implements OnInit {
   filter_game: string;
   filter_sub_game: string;
   isCancelForm: boolean;
+  isFutureYear: boolean;
+  isGoEnroll: boolean;
+  extraTabRequired: any;
+  extraTabRequiredValues: any;
   constructor(
     private confirmation: ConfirmationService,
     private messageService: MessageService,
@@ -470,6 +475,15 @@ export class StudentComponent implements OnInit {
   }
   onyeareChange(event) {
     this.yearvalue = event.value;
+    //this.certificateYear = response[0].event_year;
+
+    const startYear = parseInt(this.yearvalue.split("-")[0], 10);
+    let currentYear = new Date().getFullYear();
+
+    this.isFutureYear = startYear >= currentYear;
+
+    console.log("ev this.isFutureYearent year-->" + this.isFutureYear);
+
     this.customers = [];
     if (!this.studentGrid) {
       this.hideFilterTextBox();
@@ -561,6 +575,11 @@ export class StudentComponent implements OnInit {
   onEventChangeForStudent(event) {
     // this.ageReadble =true;
     //this.genderReadble =true;
+    // this.isFutureYear ? this.schoolReadble : !this.isFutureYear;
+    // return;
+    const eventval = event.value;
+    this.eventIdForStudent = eventval;
+
     this.schoolEnter = false;
     this.gameReadble = true;
     this.schoolName = "";
@@ -579,13 +598,18 @@ export class StudentComponent implements OnInit {
     this.showMapData = false;
     this.mapGameArray = [];
 
-    const eventval = event.value;
-    this.eventIdForStudent = eventval;
     // this.setAgeMap(eventval);
     this.meritService.loadGameByEvent(this.eventIdForStudent, false).subscribe(
       (response) => {
         if (response !== "") {
           this.gameList = response;
+          if (this.isFutureYear) {
+            this.schoolEnter = true;
+            // return;
+          }
+          this.extraTabRequired = response[0].extraTabRequired;
+          this.extraTabRequiredValues = response[0].extraTabValues;
+          console.log("this.extraTabRequired--->" + this.extraTabRequired);
           this.schoolReadble = false;
           if (this.gameList.length > 0) {
             this.gameOptions = [];
@@ -2240,7 +2264,22 @@ export class StudentComponent implements OnInit {
     // this.selectedGame = '';
     this.checkCapacity();
   }
+  onSchoolSelect(evt: any) {
+    console.log(evt.id);
+    // this.schoolId = evt.id;
+    this.newSchoolId = evt.id;
+    console.log("Value123" + JSON.stringify(evt));
+    this.isAddNewStudent = false;
+    this.isGoEnroll = true;
 
+    this.studentEnrollData = [
+      this.eventIdForStudent,
+      this.yearvalue,
+      this.newSchoolId,
+      this.extraTabRequired,
+      this.extraTabRequiredValues,
+    ];
+  }
   filterPages(event) {
     this.filteredPages = this.filterCountry(event.query, this.schoolListArray);
   }
@@ -2571,6 +2610,8 @@ export class StudentComponent implements OnInit {
     console.log("Database dropped");
   }
   enrollNewStudent() {
-    this.router.navigateByUrl("/admin/event-dashboard");
+    this.router.navigateByUrl("/admin/admin-student-enrollment", {
+      state: { studentData: this.studentEnrollData },
+    });
   }
 }

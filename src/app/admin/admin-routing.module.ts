@@ -40,7 +40,7 @@ import { IfsSchoolDataComponent } from "./ifs-school-data/ifs-school-data.compon
 import { ViewStudentComponent } from "./student-profile/view-student/view-student.component";
 import { SearchStudentProfileComponent } from "./student-profile/search-student-profile/search-student-profile.component";
 import { ManualPaymentComponent } from "./student-profile/manual-paymnet/manual-paymnet.component";
-import { EventDashboardComponent } from "../staffadmin/event-dashboard/event-dashboard.component";
+import { AdminStudentEnrollmentComponent } from "./student-profile/admin-student-enrollment/admin-student-enrollment.component";
 
 const routes: Routes = [
   {
@@ -467,11 +467,11 @@ const routes: Routes = [
             data: { adminpermission: AdminPermission.ManualPayment },
           },
           {
-            path: "event-dashboard",
+            path: "admin-student-enrollment",
             pathMatch: "full",
-            component: EventDashboardComponent,
+            component: AdminStudentEnrollmentComponent,
             canActivate: [PermissionGuard],
-            data: { adminpermission: AdminPermission.EventDashboard },
+            data: { adminpermission: AdminPermission.AdminStudentEnrollment },
           },
           // { path: 'game', component: GameComponent },
           // { path: 'dashboard', component: TestComponent },

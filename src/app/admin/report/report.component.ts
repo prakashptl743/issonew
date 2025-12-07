@@ -1372,7 +1372,7 @@ export class ReportComponent implements OnInit {
   }
 
   loadschoolChange(schoolData) {
-    console.log("Im report-->" + this.gameType[0].gameType);
+    //  console.log("Im report-->" + this.gameType[0].gameType);
     this.schoolID = schoolData.value;
     this.schoolDataArray = this.schoolID.split(",");
     this.schoolIdForCoach = this.schoolDataArray[0];
