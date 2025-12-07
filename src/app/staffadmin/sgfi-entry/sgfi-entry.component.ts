@@ -257,7 +257,7 @@ export class SgfiEntryComponent implements OnInit {
       }
       if (
         this.studentSignInput.nativeElement.value &&
-        input.files[0].size > 102400
+        input.files[0].size > 307200
       ) {
         this.isStudentFileBig = true;
         this.studentSignInput.nativeElement.value = "";
@@ -292,7 +292,7 @@ export class SgfiEntryComponent implements OnInit {
       }
       if (
         this.scannedaadharInput.nativeElement.value &&
-        input.files[0].size > 102400
+        input.files[0].size > 307200
       ) {
         this.isStudenAadaharFileBig = true;
         this.scannedaadharInput.nativeElement.value = "";
@@ -326,7 +326,7 @@ export class SgfiEntryComponent implements OnInit {
       }
       if (
         this.studentBonafideInput.nativeElement.value &&
-        input.files[0].size > 102400
+        input.files[0].size > 307200
       ) {
         this.isBonafideFileFileBig = true;
         this.studentBonafideInput.nativeElement.value = "";
@@ -359,7 +359,7 @@ export class SgfiEntryComponent implements OnInit {
       }
       if (
         this.studentmarksheetInput.nativeElement.value &&
-        input.files[0].size > 102400
+        input.files[0].size > 307200
       ) {
         this.markSheetFileFileBig = true;
         this.studentmarksheetInput.nativeElement.value = "";
@@ -394,7 +394,7 @@ export class SgfiEntryComponent implements OnInit {
       }
       if (
         this.studentBirthCertificateInput.nativeElement.value &&
-        input.files[0].size > 102400
+        input.files[0].size > 307200
       ) {
         this.birthCertificateFileFileBig = true;
         this.studentBirthCertificateInput.nativeElement.value = "";
@@ -438,7 +438,7 @@ export class SgfiEntryComponent implements OnInit {
       }
       if (
         this.headmasterSignInput.nativeElement.value &&
-        input.files[0].size > 102400
+        input.files[0].size > 307200
       ) {
         this.headMasterSignFileFileBig = true;
         this.headmasterSignInput.nativeElement.value = "";
@@ -479,7 +479,7 @@ export class SgfiEntryComponent implements OnInit {
       }
       if (
         this.studentPhotoInput.nativeElement.value &&
-        input.files[0].size > 102400
+        input.files[0].size > 307200
       ) {
         this.studentPhotoFileFileBig = true;
         this.studentPhotoInput.nativeElement.value = "";

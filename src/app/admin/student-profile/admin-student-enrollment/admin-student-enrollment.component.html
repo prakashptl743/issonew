@@ -1,0 +1,990 @@
+<p-toast
+  [style]="{ marginTop: '50px' }"
+  styleClass="custom-toast"
+  key="custom"
+  position="bottom-center"
+></p-toast>
+
+<div>
+  <div class="row">
+    <button
+      class="mb-5 col-md-3 btn btn-primary"
+      type="button"
+      (click)="goBackEnroll()"
+      pButton
+      label="Go Back to student list"
+    ></button>
+    <div class="isso-wrapper">
+      <div class="tab-content" id="myTabContent">
+        <div class=" " id="home" role="tabpanel" aria-labelledby="home-tab">
+          <div class="row event-container">
+            <div>
+              <div class="col-md-12">
+                <div class="">
+                  <span class="back align-back">
+                    <a *ngIf="showGoBack" (click)="goBack()">
+                      <i class="fa fa-arrow-left" aria-hidden="true"></i> Back
+                    </a>
+                    <a *ngIf="!showGoBack" (click)="goBackToGameList()">
+                      <img src="assets/images/web/back.svg" /> Back
+                    </a>
+                  </span>
+                  <div
+                    class="align-game-header text-center"
+                    *ngIf="!showGoBack && showSubGameList"
+                  >
+                    {{ panelHeading }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="event-container" *ngIf="noGameAvailable">
+                <div class="container1">
+                  <div class="error-code"><i class="fas fa-frown"></i></div>
+                  <div class="message">No game registered for this event</div>
+                </div>
+
+                <!-- <h2 class="animate__animated animate__bounce"> No Game Registered for this Event</h2> -->
+              </div>
+
+              <div *ngIf="!showStudentEnrollForm" class="text-center">
+                <!-- <div class="col-md-12" *ngFor="let gameData of gameList;  let i = index">
+                             {{gameData.ageRange}}
+                      </div> -->
+                <div
+                  class="col-md-12"
+                  *ngFor="let gameData of gameResponseData; let i = index"
+                >
+                  <div class="tournament-box">
+                    <div class="box-wrapper">
+                      <img
+                        src="assets/images/top-corner.png"
+                        class="top-corner"
+                      />
+                      <div class="middle-data">
+                        <img
+                          src="assets/images/ic_stars_24px.svg"
+                          classs="star"
+                        />
+                        <p>{{ gameData[0].gameName }}</p>
+                      </div>
+                      <img
+                        src="assets/images/bottom-corner.png"
+                        class="bottom-corner"
+                      />
+                    </div>
+                    <!-- <div class="game-name">
+                            <h2>{{gameData[0].gameName}}  </h2>
+                           
+                          </div> -->
+                    <div class="row" *ngFor="let game of gameData">
+                      <div class="col-md-6 col-sm-12 border-right-dark">
+                        <div class="category-box">
+                          <div *ngIf="game.gameType !== 'Both'">
+                            <!-- <img
+                                    *ngIf="game.eleven_boys > '0' || game.fourteen_boys > '0' || game.sixteen_boys > '0' || game.seventeen_boys > '0' || game.ninteen_boys > '0' "
+                                    src="assets/images/web/boys.svg" /> -->
+                            <h2
+                              *ngIf="
+                                game.eleven_boys > '0' ||
+                                game.fourteen_boys > '0' ||
+                                game.sixteen_boys > '0' ||
+                                game.seventeen_boys > '0' ||
+                                game.ninteen_boys > '0'
+                              "
+                            >
+                              Boys Tournaments
+                            </h2>
+                          </div>
+                          <div class="categories" style="padding-left: 70px">
+                            <!-- <p-messages [(value)]="messages1" [enableService]="false" [closable]="false"></p-messages> -->
+
+                            <!-- <p-messages [(value)]="messages1" [enableService]="false"></p-messages> -->
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.sixteen_boys > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].sixteenAgeMap == 9
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.sixteen_boys,
+                                  game.min_sixteen_boys,
+                                  'boy',
+                                  9
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 9
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.eleven_boys > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].elevenAgeMap == 11
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.eleven_boys,
+                                  game.min_eleven_boys,
+                                  'boy',
+                                  11
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 11
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.fourteen_boys > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].fourteenAgeMap == 14
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.fourteen_boys,
+                                  game.min_fourteen_boys,
+                                  'boy',
+                                  14
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 14
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.seventeen_boys > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].seventeenAgeMap == 17
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.seventeen_boys,
+                                  game.min_seventeen_boys,
+                                  'boy',
+                                  17
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 17
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.ninteen_boys > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].ninteenAgeMap == 19
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.ninteen_boys,
+                                  game.min_ninteen_boys,
+                                  'boy',
+                                  19
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 19
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 col-sm-12">
+                        <div class="category-box">
+                          <div *ngIf="game.gameType !== 'Both'">
+                            <!-- <img
+                                    *ngIf="game.eleven_girls > '0' || game.fourteen_girls > '0' || game.sixteen_girls > '0' || game.seventeen_girls > '0' || game.ninteen_girls > '0'"
+                                    src="assets/images/web/boys.svg" /> -->
+                            <h2
+                              *ngIf="
+                                (game.eleven_girls > '0' &&
+                                  game.gameType != 'Both' &&
+                                  gameData[0].elevenGirlsMap == 11) ||
+                                (game.fourteen_girls > '0' &&
+                                  game.gameType != 'Both' &&
+                                  gameData[0].fourteenGirlsMap == 14) ||
+                                (game.sixteen_girls > '0' &&
+                                  game.gameType != 'Both' &&
+                                  gameData[0].sixteenGilrsMap == 9) ||
+                                (game.seventeen_girls > '0' &&
+                                  game.gameType != 'Both' &&
+                                  gameData[0].seventeenGirlsMap == 17) ||
+                                (game.ninteen_girls > '0' &&
+                                  game.gameType != 'Both' &&
+                                  gameData[0].ninteenGilrsMap == 19)
+                              "
+                            >
+                              Girls Tournaments
+                            </h2>
+
+                            <!-- <h2
+                                    *ngIf="game.eleven_girls > '0' || game.fourteen_girls > '0' || game.sixteen_girls > '0'  || game.seventeen_girls > '0' || game.ninteen_girls > '0'">
+                                    Girls Tournaments Hello</h2> -->
+                          </div>
+                          <div class="categories">
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.sixteen_girls > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].sixteenGilrsMap == 9
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.sixteen_girls,
+                                  game.min_sixteen_girls,
+                                  'girl',
+                                  9
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 9
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.eleven_girls > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].elevenGirlsMap == 11
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.eleven_girls,
+                                  game.min_eleven_girls,
+                                  'girl',
+                                  11
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 11
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.fourteen_girls > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].fourteenGirlsMap == 14
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.fourteen_girls,
+                                  game.min_fourteen_girls,
+                                  'girl',
+                                  14
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 14
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.seventeen_girls > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].seventeenGirlsMap == 17
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.seventeen_girls,
+                                  game.min_seventeen_girls,
+                                  'girl',
+                                  17
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 17
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+                            <div
+                              class="col-md-4 caps-b"
+                              *ngIf="
+                                game.ninteen_girls > '0' &&
+                                game.gameType != 'Both' &&
+                                gameData[0].ninteenGilrsMap == 19
+                              "
+                              (click)="
+                                testfun(
+                                  game,
+                                  game.ninteen_girls,
+                                  game.min_ninteen_girls,
+                                  'girl',
+                                  19
+                                )
+                              "
+                            >
+                              <button type="button" class="btn capsule-btn">
+                                Under 19
+                              </button>
+                              <div class="capsule-right">
+                                <i
+                                  class="fa fa-arrow-right"
+                                  aria-hidden="true"
+                                ></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="game.gameType === 'Both'">
+                        <div class="col-md-6 col-sm-12 border-right-dark">
+                          <div class="category-box">
+                            <!-- <img src="assets/images/web/boys.svg" /> -->
+
+                            <h2>Boys Tournaments</h2>
+                            <div class="categories" style="padding-left: 70px">
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="
+                                  gameData[0].sixteenAgeMap == 9 &&
+                                  gameData[0].sixteenAgeMap == 9
+                                "
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    9,
+                                    'boy',
+                                    'sixteen_boys'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 9
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="
+                                  gameData[0].elevenAgeMap == 11 &&
+                                  gameData[0].elevenAgeMap == 11
+                                "
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    11,
+                                    'boy',
+                                    'eleven_boys'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 11
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="
+                                  gameData[0].fourteenAgeMap == 14 &&
+                                  gameData[0].fourteenAgeMap == 14
+                                "
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    14,
+                                    'boy',
+                                    'fourteen_boys'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 14
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="
+                                  gameData[0].seventeenAgeMap == 17 &&
+                                  gameData[0].seventeenAgeMap == 17
+                                "
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    17,
+                                    'boy',
+                                    'seventeen_boys'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 17
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="
+                                  gameData[0].ninteenAgeMap == 19 &&
+                                  gameData[0].ninteenAgeMap == 19
+                                "
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    19,
+                                    'boy',
+                                    'ninteen_boys'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 19
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                          <div class="category-box">
+                            <!-- <img src="assets/images/web/boys.svg" /> -->
+                            <h2
+                              *ngIf="
+                                gameData[0].elevenGirlsMap == 11 ||
+                                gameData[0].fourteenGirlsMap == 14 ||
+                                gameData[0].sixteenGilrsMap == 9 ||
+                                gameData[0].seventeenGirlsMap == 17 ||
+                                gameData[0].ninteenGilrsMap == 19
+                              "
+                            >
+                              Girls Tournaments
+                            </h2>
+                            <div class="categories">
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="gameData[0].sixteenGilrsMap == 9"
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    9,
+                                    'girl',
+                                    'sixteen_girls'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 9
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="gameData[0].elevenGirlsMap == 11"
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    11,
+                                    'girl',
+                                    'eleven_girls'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 11
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="gameData[0].fourteenGirlsMap == 14"
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    14,
+                                    'girl',
+                                    'fourteen_girls'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 14
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="gameData[0].seventeenGirlsMap == 17"
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    17,
+                                    'girl',
+                                    'seventeen_girls'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 17
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+                              <div
+                                class="col-md-4 caps-b"
+                                *ngIf="gameData[0].ninteenGilrsMap == 19"
+                                (click)="
+                                  setSubGame(
+                                    gameData[0].gameName,
+                                    gameData[0].gameType,
+                                    gameIdArray[i],
+                                    19,
+                                    'girl',
+                                    'ninteen_girls'
+                                  )
+                                "
+                              >
+                                <button type="button" class="btn capsule-btn">
+                                  Under 19
+                                </button>
+                                <div class="capsule-right">
+                                  <i
+                                    class="fa fa-arrow-right"
+                                    aria-hidden="true"
+                                  ></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tab-pane fade"
+          id="profile"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          2
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-dialog
+    class="align-dialog"
+    header="Team confirmation"
+    [(visible)]="display"
+    width="400"
+    height="50"
+    [modal]="true"
+    [responsive]="true"
+    [maximizable]="true"
+    [baseZIndex]="1000"
+  >
+    <div class="dialog-center col-md-10 mx-auto" class="">
+      <div class="">
+        <div class="">
+          {{ panelHeading }}
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <p-button label="Confirm" (onClick)="onEventConfirm()"></p-button>
+      <p-button (click)="onEventCancel()" label="No"></p-button>
+    </p-footer>
+  </p-dialog>
+
+  <div *ngIf="testBo">
+    <div class="align-game-header text-center row" *ngIf="!showSubGameList">
+      <div class="col-md-6 enroll-head">
+        {{ panelHeading }} Capacity is {{ setCapacity }}
+      </div>
+      <div *ngIf="gameType == 'Team'" class="col-md-6">
+        <span (click)="onCencelEvent()" class="delete-confim">
+          Click here for to delete team confirmation</span
+        >
+      </div>
+    </div>
+
+    <div *ngIf="studentEnrollData">
+      <app-admin-student-profile-enrollment
+        [extraTabRequiredVal]="extraTabRequiredVal"
+        [extraTabRequiredValues]="extraTabRequiredValues"
+        [studentEnrollData]="studentEnrollData"
+        [studentSubgameData]="studentSubgameData"
+        [schoolIdVal]="schoolId"
+      ></app-admin-student-profile-enrollment>
+    </div>
+  </div>
+
+  <p-confirmDialog
+    key="confirm-team-delete"
+    header="Delete team confirmation"
+    acceptLabel="Yes"
+    rejectLabel="No"
+  ></p-confirmDialog>
+
+  <p-confirmDialog key="confirm-delete-student" #cd>
+    <p-footer>
+      <button
+        class="btn btn-primary"
+        label="Yes"
+        type="button"
+        (click)="cd.accept()"
+      >
+        Yes
+      </button>
+      <button
+        class="second-btn"
+        type="button"
+        pButton
+        (click)="makeEmptyForm()"
+        label="No"
+        (click)="cd.reject()"
+      ></button>
+    </p-footer>
+  </p-confirmDialog>
+
+  <p-toast
+    [style]="{ marginTop: '50px' }"
+    styleClass="custom-toast"
+    key="custom"
+    position="bottom-center"
+  ></p-toast>
+  <div class="container" *ngIf="!showStudentEnrollForm">
+    <p-toast></p-toast>
+    <p-toast position="top-left" key="tl"></p-toast>
+    <p-toast position="top-center" key="tc"></p-toast>
+    <p-toast position="bottom-center" key="bc"></p-toast>
+
+    <p-toast
+      position="bottom-center"
+      key="c"
+      (onClose)="onReject()"
+      [baseZIndex]="5000"
+    >
+      <ng-template let-message pTemplate="message">
+        <div class="p-flex p-flex-column" style="flex: 1">
+          <div class="p-text-center">
+            <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+            <h4>{{ message.summary }}</h4>
+            <p>{{ message.detail }}</p>
+          </div>
+          <div class="p-grid p-fluid">
+            <div class="p-col-6">
+              <button
+                type="button"
+                pButton
+                (click)="onConfirm()"
+                label="Yes"
+                class="p-button-success"
+              ></button>
+            </div>
+            <div class="p-col-6">
+              <button
+                type="button"
+                pButton
+                (click)="onReject()"
+                label="No"
+                class="p-button-secondary"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-toast>
+
+    <div
+      *ngIf="showStudentEnrollForm && studentListArray.length != setCapacity"
+    >
+      <div class="container">
+        <div class="panel panel-default">
+          <div class="align-game-header">
+            {{ panelHeading }} Capacity is {{ setCapacity }}
+          </div>
+
+          <div class="panel-body">
+            <form
+              [formGroup]="studentEnroolForm"
+              class="align-form-div"
+              (ngSubmit)="onSubmit()"
+            >
+              <div class="form-group col-md-4">
+                <label class="form-control-label">Student Name</label>
+                <input
+                  [disabled]="stdNameReadable"
+                  type="text"
+                  [(ngModel)]="studentName"
+                  formControlName="studentName"
+                  placeholder="Student Name"
+                  class="form-control"
+                  id="inputSuccess1"
+                />
+              </div>
+              <div class="form-group col-md-4">
+                <label class="form-control-label">Father's/Mother's Name</label>
+                <input
+                  [disabled]="fatherNameReadable"
+                  type="text"
+                  [(ngModel)]="fatherName"
+                  formControlName="fatherName"
+                  placeholder="Father Name"
+                  class="form-control"
+                  id="inputWarning1"
+                />
+              </div>
+              <div class="form-group col-md-4">
+                <label class="form-control-label">Date of Birth</label>
+                <p-calendar
+                  [(ngModel)]="datOfBirth"
+                  formControlName="dateOfBirth"
+                  placeholder="Date of Birth"
+                  dateFormat="dd/mm/yy"
+                  showAnim="slideDown"
+                  [style]="{ width: '105%' }"
+                  [inputStyle]="{ width: '95%' }"
+                  [monthNavigator]="true"
+                  [yearNavigator]="true"
+                  yearRange="2000:2099"
+                ></p-calendar>
+              </div>
+              <div class="form-group col-md-4">
+                <label class="form-control-label">Select Class</label>
+                <p-dropdown
+                  [(ngModel)]="selectedClass"
+                  placeholder="Please Select"
+                  [options]="standardClass"
+                  size="30"
+                  formControlName="standardClass"
+                ></p-dropdown>
+              </div>
+              <!-- <div class="form-group">
+          <label class="form-control-label">Select Age</label>
+          <p-dropdown placeholder="Please Select" [options]="ageRange"  size="30" formControlName="ageRange"></p-dropdown>
+        </div> -->
+              <div class="checkbox align-nri form-group col-md-4">
+                <label>
+                  <input
+                    type="checkbox"
+                    data-md-icheck
+                    (change)="toggleVisibility($event)"
+                    #checkboxes
+                  />
+                  <span class="cr"
+                    ><i class="cr-icon glyphicon glyphicon-ok"></i
+                  ></span>
+                  Passport
+                </label>
+
+                <div *ngIf="showNRI">
+                  <label class="form-control-label">Passport</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="passport"
+                    placeholder="Passport Holder"
+                    formControlName="passPort"
+                    class="form-control"
+                    id="inputWarning1"
+                  />
+                </div>
+                <div *ngIf="showAadharTextBox">
+                  <label class="form-control-label">Aadhar Number</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="aadharNumber"
+                    placeholder="Enter Aadhar Number"
+                    maxlength="12"
+                    numbersOnly
+                    formControlName="aadharNumber"
+                    class="form-control"
+                    id="inputWarning1"
+                  />
+                </div>
+
+                <div style="display: none">
+                  <label class="form-control-label">Student Id</label>
+                  <input
+                    type="hidden"
+                    [(ngModel)]="studentId"
+                    formControlName="studentId"
+                    class="form-control"
+                    id="inputWarning1"
+                  />
+                </div>
+              </div>
+              <div class="form-group col-md-12">
+                <p-button
+                  [disabled]="!studentEnroolForm.valid"
+                  label="{{ submitButtonLabel }}"
+                ></p-button>
+                <button
+                  style="margin-left: 20px"
+                  type="button"
+                  pButton
+                  (click)="makeEmptyForm()"
+                  label="Reset"
+                ></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js " integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU " crossorigin="anonymous "></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js " integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj " crossorigin="anonymous "></script> -->
+  </div>
+</div>

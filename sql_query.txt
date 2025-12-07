@@ -297,3 +297,31 @@ GROUP BY
     e.event_year, s.schoolName, g.gameName
 ORDER BY 
     e.event_year, s.schoolName, g.gameName;
+
+
+SELECT 
+    student.studentName, 
+    student.fatherName, 
+    CASE 
+        WHEN student.gender = 1 THEN 'Boys' 
+        WHEN student.gender = 2 THEN 'Girls' 
+        ELSE 'Other' 
+    END AS gender,
+    student.dateOfBirth, 
+    game.gameName, 
+    game.gameType,
+    sgm.ageRange,
+    event.eventName,
+    event.event_year, 
+    school.schoolName
+FROM tbl_students AS student
+LEFT JOIN tbl_student_game_mapping AS sgm ON sgm.studentId = student.sId
+LEFT JOIN tbl_game AS game ON game.gameId = sgm.gameId
+LEFT JOIN tbl_subgame AS subgame ON subgame.id = sgm.subgameId
+LEFT JOIN tbl_events AS event ON event.eventId = sgm.eventId
+LEFT JOIN tbl_school AS school ON school.schoolId = student.schoolId
+WHERE 
+    (student.schoolId IS NOT NULL 
+     AND student.schoolId != 30 
+     AND student.schoolId != 'undefined')
+    AND event.event_year IN ('2021-2022', '2022-2023', '2023-2024', '2024-2025');

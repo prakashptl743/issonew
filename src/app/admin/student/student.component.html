@@ -208,13 +208,6 @@
       pButton
       label="Add New Student"
     ></button>
-    <button
-      *ngIf="!display"
-      type="button"
-      (click)="enrollNewStudent()"
-      pButton
-      label="Enroll New Student"
-    ></button>
   </div>
 </div>
 <div class="align-note" *ngIf="!display && !displaySearch">
@@ -412,7 +405,11 @@
     </tr>
   </ng-template>
 </p-table>
-
+<!-- [studentEnrollData]="studentEnrollData"
+        [studentSubgameData]="studentSubgameData" -->
+<!-- <div *ngIf="isGoEnroll">
+  <app-admin-student-enrollment></app-admin-student-enrollment>
+</div> -->
 <!-- EnD P TABLE CODE-->
 
 <!-- <div *ngIf="showStudentCount" class ="pad-bottom" style="color: #832161;">
@@ -480,7 +477,7 @@
             </div>
           </div>
         </div>
-        <div class="form-row">
+        <div class="form-row" *ngIf="!isFutureYear">
           <div class="form-group col-md-6" *ngIf="!isEditStudent">
             <label for="inputEmail4">Select Game</label>
             <p-dropdown
@@ -531,7 +528,10 @@
       </div> -->
         </div>
         <div class="form-row">
-          <div class="form-group col-md-6" *ngIf="!isEditStudent">
+          <div
+            class="form-group col-md-6"
+            *ngIf="!isEditStudent && !isFutureYear"
+          >
             <label for="inputPassword4">Select Gender</label>
             <p-dropdown
               [disabled]="!genderReadble"
@@ -550,7 +550,10 @@
             </div>
           </div>
 
-          <div class="form-group col-md-6" *ngIf="!isEditStudent">
+          <div
+            class="form-group col-md-6"
+            *ngIf="!isEditStudent && !isFutureYear"
+          >
             <label for="inputEmail4">Select School</label>
             <p-autoComplete
               [disabled]="!schoolEnter"
@@ -579,6 +582,47 @@
               </ng-template>
             </p-autoComplete>
             <!-- <p-dropdown [disabled]="!gameReadble" formControlName="studentGame" [(ngModel)]="selectedGame" [options]="gameOptions"  placeholder="Select Game" (onChange)="loadGameChange($event)" [style]="{'min-width':'140px'}"></p-dropdown> -->
+          </div>
+
+          <div class="form-group col-md-6" *ngIf="isFutureYear">
+            <label for="inputEmail4">Select School</label>
+            <p-autoComplete
+              [disabled]="!schoolEnter"
+              [(ngModel)]="schoolName"
+              [style]="{ width: '100%' }"
+              class="p-autocomplete"
+              formControlName="schoolName"
+              [suggestions]="filteredPages"
+              (completeMethod)="filterPages($event)"
+              field="text"
+              placeholder="Enter school Name"
+              emptyMessage="School Not found"
+              [minLength]="1"
+              (onSelect)="onSchoolSelect($event)"
+            >
+              <ng-template let-brand pTemplate="item">
+                <div
+                  class="ui-helper-clearfix"
+                  style="border-bottom: 1px solid #d5d5d5"
+                >
+                  <div style="font-size: 14px; float: left; margin: 10px">
+                    {{ brand.text }}
+                  </div>
+                  <br />
+                </div>
+              </ng-template>
+            </p-autoComplete>
+            <!-- <p-dropdown [disabled]="!gameReadble" formControlName="studentGame" [(ngModel)]="selectedGame" [options]="gameOptions"  placeholder="Select Game" (onChange)="loadGameChange($event)" [style]="{'min-width':'140px'}"></p-dropdown> -->
+          </div>
+          <div class="mt-4 form-group col-md-6" *ngIf="isFutureYear">
+            <button
+              [disabled]="!isGoEnroll"
+              class="btn btn-primary"
+              type="button"
+              (click)="enrollNewStudent()"
+            >
+              Go
+            </button>
           </div>
         </div>
         <div class="form-row" *ngIf="isShowSubGame">

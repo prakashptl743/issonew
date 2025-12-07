@@ -5,9 +5,15 @@
   <div class="main-body certificate-font">
     <div *ngFor="let student of certificateData; let i = index">
       <section class="upper-body">
-        <img src="assets/images/newImages/sp1.png" />
+        <!-- <img src="assets/images/newImages/sp1.png" /> -->
+        <img *ngIf="!isFutureYear" src="assets/images/newImages/sp1.png" />
+        <img *ngIf="isFutureYear" src="assets/images/newImages/2025_1.jpg" />
       </section>
-      <section class="certificate-section">
+      <section
+        [ngClass]="
+          isFutureYear ? 'certificate-2025-section' : 'certificate-section'
+        "
+      >
         <h1>{{ student.certifiacteHeaderContent }}</h1>
         <div class="venue-section">
           <span>VENUE:</span><span>{{ student.location | uppercase }}</span>
@@ -105,7 +111,22 @@
             student.event_year
           }}/merit/{{ student.qrscancode }}"
         />
-        <img class="lower-bg" src="assets/images/newImages/sp3.png" />
+        <!-- <img class="lower-bg" src="assets/images/newImages/sp3.png" /> -->
+        <img
+          *ngIf="!isFutureYear"
+          class="lower-bg"
+          src="assets/images/newImages/sp3.png"
+        />
+        <img
+          *ngIf="isFutureYear && !isMerit"
+          class="lower-bg"
+          src="assets/images/newImages/2025_3.jpg"
+        />
+        <img
+          *ngIf="isFutureYear && isMerit"
+          class="lower-bg"
+          src="assets/images/newImages/2025_merit.jpg"
+        />
       </section>
     </div>
   </div>
